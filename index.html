@@ -3,13 +3,12 @@
 <head>
     
     <meta charset="UTF-8">
-    <a href="chat.html"></a>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rook Browser</title>
     <!-- Official libcurl.js WebAssembly Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/libcurl.js@latest/libcurl_full.js"></script>
 
-    
+    <button id="chat-widget-btn" onclick="toggleChat()">💬 Chat</button>
 
     <div id="chat-widget-container">
     <div id="chat-drag-handle">Global Chat (Fullscreen)</div>
@@ -1030,7 +1029,6 @@
                     <div class="home-shortcuts">
                         
                         <a class="shortcut-pill" data-url="rook://updates">Updates</a>
-                        <a class="shortcut-pill" href="chat.html">Chat</a>
                         <a class="shortcut-pill" data-url="rook://settings">Settings</a>
                         <a class="shortcut-pill" data-url="https://chess.com">Chess</a>
                         <a class="shortcut-pill" data-url="https://duckduckgo.com">DuckDuckGo</a>
