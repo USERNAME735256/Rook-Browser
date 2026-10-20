@@ -291,6 +291,8 @@
         .shop-equip { background: var(--helper-color); color: black; }
         .shop-owned { background: #333; color: #666; cursor: default; }
 
+        .home-btnn { width: 100%; padding: 6px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
+
         /* INDEX Styling */
         .index-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.03); margin-bottom: 5px; border-radius: 6px; font-size: 0.85rem; border: 1px solid transparent; transition:0.2s; }
         .index-item:hover { background: rgba(255,255,255,0.08); border-color: #555; }
@@ -464,6 +466,8 @@
             <button class="btn" onclick="toggleWin('afk-window')">💤 Sleep</button>
             <button class="btn" onclick="toggleWin('inventory-window')">🎒 Bag</button>
             <button class="btn" onclick="toggleWin('shop-window')">🎨 Shop</button>
+            <button class="home-btnn" onclick="window.location.href='index.html'">Home</button>
+
             
             <button class="btn btn-mod" id="btn-mod" onclick="toggleWin('admin-window')">🛡️ Admin</button>
             <button class="btn btn-pres" id="btn-pres" onclick="toggleWin('president-window')">🏛️ Oval Office</button>
