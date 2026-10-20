@@ -1,14 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rook Browser</title>
     <!-- Official libcurl.js WebAssembly Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/libcurl.js@latest/libcurl_full.js"></script>
 
+    <button id="chat-widget-btn" onclick="toggleChat()">💬 Chat</button>
+
+    <div id="chat-widget-container">
+    <div id="chat-drag-handle">Global Chat (Fullscreen)</div>
+    <iframe id="chat-iframe" src="chat.html"></iframe>
+</div>
+
+<script>
+    const container = document.getElementById('chat-widget-container');
+    const btn = document.getElementById('chat-widget-btn');
+
+   
+        function toggleChat() {
+        if (container.style.display === 'none' || !container.style.display) {
+            container.style.display = 'flex';
+            btn.innerHTML = '❌ Close';
+            btn.style.backgroundColor = '#ff5252';
+            document.body.style.overflow = 'hidden'; // Lock background scrolling
+        } else {
+            container.style.display = 'none';
+            btn.innerHTML = '💬 Chat';
+            btn.style.backgroundColor = '#4a90e2';
+            document.body.style.overflow = ''; // Unlock background scrolling
+        }
+    }
+    </script>
+
+
+
 
     <style>
+#chat-widget-btn:hover { transform: scale(1.05); }
+
+
+    #chat-iframe {
+        flex: 1;
+        width: 100%;
+        border: none;
+        pointer-events: auto; 
+    }
+
+ #chat-widget-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        
+        background: #1e1e24;
+        z-index: 9998;
+        
+        display: none;
+        flex-direction: column;
+    }
+
+         #chat-widget-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4a90e2; 
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 15px 25px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
 
 
@@ -697,6 +769,8 @@
 
     <div id="views-container"></div>
 
+    
+
     <div id="log-drawer">
         <div id="log-header">
             <span>CONSOLE LOGS</span>
@@ -882,7 +956,11 @@
             }
             throw lastErr || new Error("All Wisp proxy endpoints failed to complete the request.");
         }
+        
+        
 
+        
+        
         function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
             return Promise.race([
                 executeLibcurlFetch(url, options),
@@ -949,13 +1027,14 @@
                         <input type="text" class="home-input" placeholder="Search with Rook or type a URL" />
                     </div>
                     <div class="home-shortcuts">
-                        <div class="shortcut-pill" data-url="rook://updates">Updates</div>
-                        <div class="shortcut-pill" data-url="rook://settings">Settings</div>
-                        <div class="shortcut-pill" data-url="https://www.google.com">Google</div>
-                        <div class="shortcut-pill" data-url="https://duckduckgo.com">DuckDuckGo</div>
-                        <div class="shortcut-pill" data-url="https://wikipedia.org">Wikipedia</div>
-                        <div class="shortcut-pill" data-url="https://github.com">GitHub</div>
-                        <div class="shortcut-pill" data-url="https://reddit.com">Reddit</div>
+                        
+                        <a class="shortcut-pill" data-url="rook://updates">Updates</a>
+                        <a class="shortcut-pill" data-url="rook://settings">Settings</a>
+                        <a class="shortcut-pill" data-url="https://chess.com">Chess</a>
+                        <a class="shortcut-pill" data-url="https://duckduckgo.com">DuckDuckGo</a>
+                        <a class="shortcut-pill" data-url="https://wikipedia.org">Wikipedia</a>
+                        <a class="shortcut-pill" data-url="https://github.com">GitHub</a>
+                        <a class="shortcut-pill" data-url="https://reddit.com">Reddit</a>
                     </div>
                 </div>
 
@@ -1198,6 +1277,7 @@
                                     <li><b>Wisp Failover & Pool Management:</b> Automatic multi-node fallback engine to recover from WebSocket disconnection without dropping requests.</li>
                                     <li><b>No Service Worker Requirement:</b> Single-file HTML bundle design running direct in-memory libcurl WASM bindings.</li>
                                     <li><b>IP Leak Protection:</b> WebRTC PeerConnection masking active by default.</li>
+                                    <li><b>Forks global chat has been added to the site. and many bugs!</li>
                                     <li><b>EMAIL ME AT 735256@salemkeizer.org FOR REQUESTS OR SUGGESTIONS!!!!</li>  
                                 </ul>
                             </div>
@@ -1436,6 +1516,8 @@
             try {
                 canonicalBaseUrl = new URL(baseUrl).href;
             } catch(e) {}
+
+          
 
             // Ensure <base href="..."> is injected as the absolute first child of <head>
             doc.querySelectorAll('base').forEach(el => el.remove());
@@ -1690,6 +1772,15 @@
         } else {
             initEngine();
         }
+
+
+
+
     </script>
+
+
+
+
+
 </body>
 </html>
