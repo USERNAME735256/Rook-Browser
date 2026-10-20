@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+<button id="hub">Open</button>
+
+<script>
+document.getElementById("hub").onclick = async () => {
+    // Added ?v= before the timestamp to make it a query parameter
+    const hubCode = await fetch(
+        "https://raw.githubusercontent.com/USERNAME735256/Rook-Browser/refs/heads/main/index.html?v=" + Date.now(),
+    ).then(r => r.text());
+
+    const win = window.open("about:blank", "_blank");
+
+    win.document.open();
+    win.document.write(hubCode);
+    win.document.close();
+};
+</script>
+    <style>
+        #hub {
+            width: 150px;
+            height: 50px;
+            display: block;
+            margin: auto;
+            justify-content: center;
+            align-items: center;
+            border-radius: 25px;
+            color: grey;
+            background-color: aqua;
+        }
+
+        body {
+  margin: 0;
+  height: 100vh; /* full viewport height */
+  display: flex;
+  justify-content: center; /* horizontal center */
+  align-items: center;     /* vertical center */
+  background-color: black;
+        }
+
+    </style>
+</body>
+</html>
