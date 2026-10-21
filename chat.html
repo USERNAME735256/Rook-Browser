@@ -403,6 +403,170 @@
         #inspector-result p { margin: 2px 0; }
         #inspector-result b { color: var(--accent); }
         .secure-data { color: #ff5252; font-family: monospace; }
+
+        /* ===== DISCORD-STYLE SHELL ===== */
+        :root {
+            --bg-color: #1e1f22;
+            --chat-bg: #313338;
+            --text-color: #dbdee1;
+            --text-muted: #949ba4;
+            --accent: #5865f2;
+            --accent-glow: rgba(88, 101, 242, 0.3);
+            --border: #1f2023;
+            --panel-bg: #313338;
+            --sidebar-bg: #2b2d31;
+            --sidebar-hover: #35373c;
+            --rail-bg: #1e1f22;
+        }
+
+        .app-shell { display: flex; height: 100vh; flex: 1; min-height: 0; width: 100%; overflow: hidden; background: var(--chat-bg); }
+        .nav-toggle { display: none; }
+
+        .server-rail {
+            width: 72px; flex-shrink: 0; background: var(--rail-bg);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            padding: 12px 0; overflow-y: auto; overflow-x: hidden;
+        }
+        .server-rail::-webkit-scrollbar { width: 0px; }
+        .rail-logo {
+            width: 48px; height: 48px; flex-shrink: 0; border-radius: 16px; margin-bottom: 4px;
+            background: var(--accent); color: #fff; font-size: 1.4rem;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+        }
+        .rail-btn {
+            width: 48px; height: 48px; flex-shrink: 0; border: none; cursor: pointer;
+            border-radius: 16px; background: var(--sidebar-bg); color: var(--text-color);
+            font-size: 1.25rem; display: flex; align-items: center; justify-content: center;
+            transition: border-radius 0.15s ease, background 0.15s ease, color 0.15s ease;
+        }
+        .rail-btn:hover { border-radius: 14px; background: var(--accent); color: #fff; }
+
+        .channel-sidebar {
+            width: 240px; flex-shrink: 0; background: var(--sidebar-bg);
+            display: flex; flex-direction: column; border-right: 1px solid var(--border);
+        }
+        .sidebar-header {
+            height: 48px; flex-shrink: 0; display: flex; align-items: center; padding: 0 16px;
+            color: #f2f3f5; font-weight: 700; font-size: 0.95rem;
+            border-bottom: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+        }
+        .sidebar-scroll { flex: 1; overflow-y: auto; padding: 8px; }
+        .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+        .sidebar-scroll::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 3px; }
+        .sidebar-scroll .header-controls {
+            display: flex; flex-direction: column; gap: 2px;
+            max-width: none; overflow: visible; padding: 0;
+        }
+        .sidebar-scroll .header-controls .btn {
+            width: 100%; justify-content: flex-start; background: transparent; border: none;
+            border-radius: 6px; color: var(--text-muted); font-weight: 500;
+            font-size: 0.9rem; padding: 8px 10px; white-space: normal;
+        }
+        .sidebar-scroll .header-controls .btn:hover {
+            background: var(--sidebar-hover); color: #f2f3f5; transform: none; box-shadow: none;
+        }
+        .sidebar-scroll .header-controls .btn-primary { background: transparent; color: #f2f3f5; border: none; }
+        .sidebar-scroll .header-controls .tines-display {
+            background: transparent; border: none; border-radius: 6px; justify-content: flex-start;
+            color: var(--tine-color); padding: 8px 10px; font-size: 0.9rem;
+        }
+        .sidebar-scroll .header-controls .active-user-indicator { margin: 0; padding: 6px 10px; }
+
+        .chat-main { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--chat-bg); }
+        .channel-header {
+            height: 48px; flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+            padding: 0 16px; background: var(--chat-bg); border-bottom: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.25); z-index: 10;
+        }
+        .channel-hash { color: #80848e; font-size: 1.3rem; font-weight: 600; }
+        .channel-name { color: #f2f3f5; font-weight: 700; font-size: 1rem; }
+        .channel-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+        .nav-toggle-btn { display: none; }
+        .chat-main .status-pill {
+            background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: #b5bac1;
+            font-family: inherit; font-size: 0.75rem; padding: 5px 10px;
+        }
+        .chat-main .status-pill:hover { border-color: #4e5058; }
+
+        .chat-main .chat-area { padding: 16px 0 24px; gap: 0; background: var(--chat-bg); }
+        .chat-main .chat-area::-webkit-scrollbar { width: 8px; }
+        .chat-main .chat-area::-webkit-scrollbar-thumb { background: #1a1b1e; border-radius: 4px; }
+        .chat-main .message { background: transparent; border-radius: 0; padding: 6px 16px; margin: 0; }
+        .chat-main .message:hover { background: rgba(4,4,5,0.07); }
+        .chat-main .message.owner, .chat-main .message.president,
+        .chat-main .message.mod, .chat-main .message.cave { background: transparent; }
+        .chat-main .message.mention { background: rgba(88,101,242,0.12); border-left-color: var(--accent); }
+        .chat-main .message.announcement, .chat-main .message.achievement { margin: 6px 16px; border-radius: 6px; }
+        .chat-main .msg-avatar { border-radius: 50%; box-shadow: none; }
+        .chat-main .msg-header { margin-bottom: 2px; gap: 6px; }
+        .chat-main .msg-timestamp { font-size: 0.68rem; color: #949ba4; font-family: inherit; }
+        .chat-main .role-tag { font-size: 0.6rem; padding: 1px 5px; border-radius: 3px; }
+        .chat-main .msg-text { color: #dbdee1; font-size: 0.95rem; }
+
+        .chat-main .input-container { padding: 0 16px 24px; background: var(--chat-bg); border-top: none; }
+        .chat-main .chat-input { background: #383a40; border: 1px solid transparent; border-radius: 8px; padding: 11px 16px; color: #dbdee1; font-size: 0.95rem; }
+        .chat-main .chat-input::placeholder { color: #6d6f78; }
+        .chat-main .chat-input:focus { border-color: transparent; box-shadow: none; }
+        .chat-main .send-btn { width: auto; height: 41px; padding: 0 16px; border-radius: 8px; background: var(--accent); font-size: 0.85rem; font-weight: 600; }
+        .chat-main .send-btn:hover { background: #4752c4; transform: none; }
+
+        .window-panel { background: var(--panel-bg); border: none; border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.55); }
+        .win-header { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+
+        @media (max-width: 860px) {
+            .channel-sidebar {
+                position: fixed; top: 0; bottom: 0; left: 72px; z-index: 1200;
+                transform: translateX(-105%); transition: transform 0.2s ease;
+                box-shadow: 8px 0 24px rgba(0,0,0,0.5);
+            }
+            .nav-toggle:checked ~ .channel-sidebar { transform: translateX(0); }
+            .nav-toggle-btn {
+                display: flex; align-items: center; justify-content: center;
+                width: 28px; height: 28px; margin-right: 4px; cursor: pointer;
+                border-radius: 6px; color: var(--text-muted); font-size: 1rem;
+            }
+            .nav-toggle-btn:hover { background: var(--sidebar-hover); color: #f2f3f5; }
+        }
+
+        /* ===== SETTINGS, THEME + MINI PROFILE ===== */
+        .settings-body { display: flex; padding: 0; min-height: 240px; }
+        .settings-tabs { width: 118px; flex-shrink: 0; padding: 10px 6px; background: var(--sidebar-bg); border-right: 1px solid var(--border); }
+        .settings-tab { padding: 8px 10px; margin-bottom: 2px; border-radius: 6px; cursor: pointer; color: var(--text-muted); font-weight: 600; font-size: 0.78rem; }
+        .settings-tab:hover, .settings-tab.active { background: var(--sidebar-hover); color: var(--text-color); }
+        .settings-pane { flex: 1; min-width: 0; padding: 16px; }
+        .set-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .set-title { color: var(--text-color); font-weight: 600; font-size: 0.85rem; } .set-sub { margin-top: 3px; color: var(--text-muted); font-size: 0.72rem; }
+        .switch { position: relative; flex-shrink: 0; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .switch span { position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 12px; background: var(--sidebar-hover); border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
+        .switch span::before { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: 0.2s; }
+        .switch input:checked + span { background: var(--accent); border-color: var(--accent); }
+        .switch input:checked + span::before { transform: translateX(20px); }
+        .acc-id { margin-top: 3px; color: #7a7f87; font-family: monospace; font-size: 0.7rem; }
+        .mini-profile { position: fixed; display: none; width: 250px; background: var(--panel-bg); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 12px 34px rgba(0,0,0,0.55); z-index: 6000; overflow: hidden; animation: fadeIn 0.15s ease; }
+        .mini-banner { height: 44px; background: linear-gradient(135deg, var(--accent), #8b5cf6); }
+        .mini-avatar { display: block; width: 60px; height: 60px; margin: -30px 0 0 14px; border-radius: 50%; border: 5px solid var(--panel-bg); background: var(--panel-bg); }
+        .mini-body { padding: 8px 14px 14px; } .mini-line { margin-top: 8px; color: var(--text-muted); font-size: 0.72rem; }
+        .mini-name { color: var(--text-color); font-weight: 700; } .mini-id { color: var(--text-muted); font-family: monospace; font-size: 0.78rem; }
+        .mini-actions { display: flex; gap: 6px; margin-top: 10px; }
+        .mini-actions .btn { flex: 1; padding: 6px; font-size: 0.72rem; }
+
+        /* light theme, same tokens flipped */
+        [data-theme="light"] { --bg-color: #f2f3f5; --chat-bg: #ffffff; --text-color: #2e3338; --text-muted: #5c5e66; --border: #e3e5e8; --panel-bg: #ffffff; --sidebar-bg: #f2f3f5; --sidebar-hover: #e3e5e8; --rail-bg: #e3e5e8; }
+        [data-theme="light"] .win-header, [data-theme="light"] .channel-header { background: transparent; color: #060607; border-bottom-color: var(--border); box-shadow: none; }
+        [data-theme="light"] .sidebar-header, [data-theme="light"] .channel-name { color: #060607; }
+        [data-theme="light"] .channel-hash, [data-theme="light"] .member-name, [data-theme="light"] .msg-timestamp { color: #5c5e66; }
+        [data-theme="light"] .msg-text { color: #2e3338; }
+        [data-theme="light"] .sidebar-scroll .header-controls .btn, [data-theme="light"] .sidebar-scroll .header-controls .btn-primary, [data-theme="light"] .sidebar-scroll .header-controls .btn:hover { color: #4e5058; }
+        [data-theme="light"] .chat-main .message:hover { background: rgba(6,6,7,0.03); }
+        [data-theme="light"] .message.user .username, [data-theme="light"] .message.user .role-tag { color: #23272a !important; }
+        [data-theme="light"] .message.owner .username, [data-theme="light"] .message.owner .role-tag { color: #b8860b !important; }
+        [data-theme="light"] .chat-main .chat-input { background: #ebedef; color: #2e3338; } [data-theme="light"] .chat-main .chat-input::placeholder { color: #80848e; }
+        [data-theme="light"] .status-pill { background: rgba(0,0,0,0.04); color: #4e5058; }
+        [data-theme="light"] .account-item { background: #f2f3f5; } [data-theme="light"] .account-item:hover { background: #e3e5e8; }
+        [data-theme="light"] .member-item { border-bottom-color: rgba(0,0,0,0.06); } [data-theme="light"] .auth-box { background: #ffffff; border-color: var(--border); }
+        [data-theme="light"] .auth-input, [data-theme="light"] .input-dark, [data-theme="light"] .admin-btn { background: #f2f3f5; border-color: #d7d9dd; color: #2e3338; }
     </style>
 </head>
 <body>
@@ -455,43 +619,60 @@
     </div>
 
     <!-- MAIN UI -->
-    <div class="chat-header">
-        <div class="header-controls">
-            <button class="btn btn-primary" onclick="openProfile()">Account</button>
-            <div class="tines-display">🔱 <span id="tines-count">0</span></div>
-            <span id="active-user-indicator" style="display:none;"></span> 
-            <span id="current-room-display" style="color:#666; font-size:0.8rem; border:1px solid #333; padding:2px 6px; border-radius:4px; margin-right:5px;">Global</span>
-            
-            <button class="btn" onclick="toggleWin('rooms-window')">🏠 Rooms</button>
-            <button class="btn" onclick="toggleWin('game-window')">🎮 Game</button>
-            <button class="btn" onclick="toggleWin('afk-window')">💤 Sleep</button>
-            <button class="btn" onclick="toggleWin('inventory-window')">🎒 Bag</button>
-            <button class="btn" onclick="toggleWin('shop-window')">🎨 Shop</button>
-            
-            
-            <button class="btn btn-mod" id="btn-mod" onclick="toggleWin('admin-window')">🛡️ Admin</button>
-            <button class="btn btn-pres" id="btn-pres" onclick="toggleWin('president-window')">🏛️ Oval Office</button>
-            <button class="btn btn-troll" id="btn-troll" onclick="toggleWin('troll-window')">🤡 Troll</button>
-            <button class="btn btn-owner" id="btn-owner" onclick="toggleWin('admin-window')">👑 Owner</button>
-            <button class="btn btn-roles" id="btn-roles" onclick="openRolesMenu()">🎖️ Roles</button>
-            
-            <button class="btn btn-manual" onclick="toggleWin('manual-window')">📖 Book</button>
-            <button class="btn btn-index" onclick="toggleWin('index-window')">📜 Index</button>
-            <button class="btn btn-staff-config" id="btn-staff-settings" onclick="toggleWin('staff-settings-window')">⚙️ Config</button>
-            <button class="btn" id="btn-players" style="display:none; color:lime; border-color:lime;" onclick="toggleWin('members-window')">👥 Players</button>
-        </div>
-        <div class="status-pill" onclick="initWebSocket()">
-            <span id="status-dot" class="status-dot connecting"></span>
-            <span id="status-text">Connecting...</span>
-            <span style="margin-left: 10px;">👥 <span id="online-count">0</span></span>
-        </div>
-    </div>
+    <div class="app-shell">
+        <input type="checkbox" id="nav-toggle" class="nav-toggle">
 
-    <div class="chat-area" id="chat-display"></div>
+        <aside class="server-rail">
+            <div class="rail-logo" title="Fork OS Global">🔱</div>
+            <button class="rail-btn" type="button" title="Rooms" onclick="toggleWin('rooms-window')">🏠</button>
+            <button class="rail-btn" type="button" title="Game" onclick="toggleWin('game-window')">🎮</button>
+            <button class="rail-btn" type="button" title="Sleep" onclick="toggleWin('afk-window')">💤</button>
+            <button class="rail-btn" type="button" title="Bag" onclick="toggleWin('inventory-window')">🎒</button>
+            <button class="rail-btn" type="button" title="Shop" onclick="toggleWin('shop-window')">🎨</button>
+            <button class="rail-btn" type="button" title="Book" onclick="toggleWin('manual-window')">📖</button>
+            <button class="rail-btn" type="button" title="Index" onclick="toggleWin('index-window')">📜</button>
+        </aside>
 
-    <div class="input-container">
-        <input type="text" class="chat-input" id="chat-input" placeholder="Type a message... (/help, /poll)" onkeydown="if(event.key === 'Enter') sendMessage()">
-        <button class="send-btn" onclick="sendMessage()">Send</button>
+        <aside class="channel-sidebar">
+            <div class="sidebar-header">Fork OS Global</div>
+            <div class="sidebar-scroll">
+                <div class="header-controls">
+                    <button class="btn btn-primary" onclick="openProfile()">Account</button>
+                    <div class="tines-display">🔱 <span id="tines-count">0</span></div>
+                    <span id="active-user-indicator" style="display:none;"></span>
+                    <button class="btn btn-mod" id="btn-mod" onclick="toggleWin('admin-window')">🛡️ Admin</button>
+                    <button class="btn btn-pres" id="btn-pres" onclick="toggleWin('president-window')">🏛️ Oval Office</button>
+                    <button class="btn btn-troll" id="btn-troll" onclick="toggleWin('troll-window')">🤡 Troll</button>
+                    <button class="btn btn-owner" id="btn-owner" onclick="toggleWin('admin-window')">👑 Owner</button>
+                    <button class="btn btn-roles" id="btn-roles" onclick="openRolesMenu()">🎖️ Roles</button>
+                    <button class="btn btn-staff-config" id="btn-staff-settings" onclick="toggleWin('staff-settings-window')">⚙️ Config</button>
+                    <button class="btn" id="btn-players" style="display:none; color:lime; border-color:lime;" onclick="toggleWin('members-window')">👥 Players</button>
+                    <button class="btn" onclick="toggleWin('settings-window')">🎛️ Settings</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="chat-main">
+            <div class="channel-header">
+                <label class="nav-toggle-btn" for="nav-toggle">☰</label>
+                <span class="channel-hash">#</span>
+                <span class="channel-name" id="current-room-display">Global</span>
+                <div class="channel-actions">
+                    <div class="status-pill" onclick="initWebSocket()">
+                        <span id="status-dot" class="status-dot connecting"></span>
+                        <span id="status-text">Connecting...</span>
+                        <span style="margin-left: 10px;">👥 <span id="online-count">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-area" id="chat-display"></div>
+
+            <div class="input-container">
+                <input type="text" class="chat-input" id="chat-input" placeholder="Type a message... (/help, /poll)" onkeydown="if(event.key === 'Enter') sendMessage()">
+                <button class="send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </main>
     </div>
 
     <!-- WINDOWS -->
@@ -687,7 +868,40 @@
     <div id="link-gen-window" class="window-panel"><div class="win-header"><span>GENERATOR</span> <span class="win-close" onclick="toggleWin('link-gen-window')">×</span></div><div class="win-body" style="text-align:center;"><button class="admin-btn" onclick="generateLink()">Generate Link (20 Tines)</button><div id="gen-result" style="margin-top:10px; color:cyan;"></div></div></div>
     <div id="vpn-window" class="window-panel"><div class="win-header"><span>VPN</span> <span class="win-close" onclick="toggleWin('vpn-window')">×</span></div><div class="win-body" style="text-align:center;"><h2 id="vpn-status" style="color:white;">OFF</h2><button class="admin-btn" onclick="toggleVPN()">Toggle</button></div></div>
     <div id="troll-window" class="window-panel"><div class="win-header"><span>TROLL</span> <span class="win-close" onclick="toggleWin('troll-window')">×</span></div><div class="win-body"><input type="text" id="troll-target" class="input-dark"><button class="admin-btn" onclick="sendTroll('fake_error')">BSOD</button></div></div>
-    <div id="settings-window" class="window-panel"><div class="win-header"><span>SETTINGS</span> <span class="win-close" onclick="toggleWin('settings-window')">×</span></div><div class="win-body"><input type="text" id="room-code-input" class="input-dark"><button class="admin-btn" onclick="updateRoom()">Update</button></div></div>
+    <div id="settings-window" class="window-panel">
+        <div class="win-header"><span>SETTINGS</span> <span class="win-close" onclick="toggleWin('settings-window')">×</span></div>
+        <div class="win-body settings-body">
+            <div class="settings-tabs">
+                <div class="settings-tab active" id="stab-appearance" onclick="switchSettings('appearance')">Appearance</div>
+                <div class="settings-tab" id="stab-accounts" onclick="switchSettings('accounts')">Accounts</div>
+                <div class="settings-tab" id="stab-room" onclick="switchSettings('room')">Room</div>
+            </div>
+            <div class="settings-pane" id="spane-appearance">
+                <div class="set-row">
+                    <div><div class="set-title">Dark mode</div><div class="set-sub">Switch the whole app between dark and light.</div></div>
+                    <label class="switch"><input type="checkbox" id="theme-toggle" onchange="toggleTheme()"><span></span></label>
+                </div>
+            </div>
+            <div class="settings-pane" id="spane-accounts" style="display:none;">
+                <div id="settings-account-list"></div>
+                <button class="auth-btn" style="background:#00e676; color:black;" onclick="toggleWin('settings-window'); openProfile(); switchAuth('signup')">+ New Account</button>
+            </div>
+            <div class="settings-pane" id="spane-room" style="display:none;">
+                <input type="text" id="room-code-input" class="input-dark">
+                <button class="admin-btn" onclick="updateRoom()">Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mini-profile" class="mini-profile">
+        <div class="mini-banner"></div><img id="mini-avatar" class="mini-avatar" alt="">
+        <div class="mini-body">
+            <div class="mini-name" id="mini-name">User</div>
+            <div class="mini-id" id="mini-id">ID #0000</div>
+            <div class="mini-line"><span id="mini-role">User</span> · <span id="mini-state">⚪ Offline</span> · <span id="mini-tines"></span></div>
+            <div class="mini-actions"><button class="btn" onclick="mentionUser()">@ Mention</button></div>
+        </div>
+    </div>
     <div id="members-window" class="window-panel"><div class="win-header"><span>MEMBERS</span> <span class="win-close" onclick="toggleWin('members-window')">×</span></div><div class="win-body" id="members-list"></div></div>
     
     <!-- BAN SCREEN (Keeps WS active) -->
@@ -696,6 +910,81 @@
         <p id="ban-msg">You are disconnected from Global Chat.</p>
         <p style="opacity:0.5; font-size:0.8rem; margin-top:20px;">ID: <span id="ban-id">...</span></p>
     </div>
+
+    <!-- ===== SETTINGS, THEME + USER CARDS ===== -->
+    <script>
+        // --- THEME --- dark is the default look, the switch in Settings flips this attribute
+        function applyTheme(mode) {
+            document.documentElement.setAttribute('data-theme', mode);
+            const box = document.getElementById('theme-toggle');
+            if (box) box.checked = mode === 'dark';
+        }
+        function toggleTheme() {
+            const mode = document.getElementById('theme-toggle').checked ? 'dark' : 'light';
+            localStorage.setItem('fork_theme', mode);
+            applyTheme(mode);
+        }
+        applyTheme(localStorage.getItem('fork_theme') === 'light' ? 'light' : 'dark');
+
+        // --- SETTINGS TABS ---
+        function switchSettings(tab) {
+            ['appearance', 'accounts', 'room'].forEach(t => {
+                const btn = document.getElementById('stab-' + t);
+                const pane = document.getElementById('spane-' + t);
+                if (btn) btn.classList.toggle('active', t === tab);
+                if (pane) pane.style.display = (t === tab) ? 'block' : 'none';
+            });
+            if (tab === 'accounts') renderManager('settings-account-list');
+        }
+
+        // --- USER IDS --- same tag every time, nothing to store
+        function userTag(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) % 10000;
+            return '#' + String(hash).padStart(4, '0');
+        }
+
+        // --- MINI PROFILE CARD ---
+        function showMiniProfile(name, el) {
+            const card = document.getElementById('mini-profile');
+            if (!card || !el) return;
+            const acc = accounts[name] ? accounts[name].data : null;
+            const header = el.closest('.msg-header');
+            const tagOnScreen = header ? header.querySelector('.role-tag') : null;
+            const face = (acc && acc.equipped && acc.equipped.avatar) ? acc.equipped.avatar : 'bottts';
+
+            document.getElementById('mini-avatar').src = `https://api.dicebear.com/9.x/${face}/svg?seed=${name}`;
+            document.getElementById('mini-name').innerText = name;
+            document.getElementById('mini-id').innerText = 'ID ' + userTag(name);
+            document.getElementById('mini-role').innerText = acc ? acc.role : (tagOnScreen ? tagOnScreen.innerText : 'User');
+            document.getElementById('mini-state').innerText = onlineUsers.has(name) ? '🟢 Online' : '⚪ Offline';
+            document.getElementById('mini-tines').innerText = acc ? `🔱 ${acc.tines || 0} Tines` : '';
+            card.dataset.user = name;
+
+            // open next to the name, and flip above it when there is no room below
+            card.style.display = 'block';
+            const spot = el.getBoundingClientRect();
+            card.style.left = Math.min(Math.max(8, spot.left - 30), window.innerWidth - card.offsetWidth - 8) + 'px';
+            let top = spot.bottom + 10;
+            if (top + card.offsetHeight > window.innerHeight - 8) top = Math.max(8, spot.top - card.offsetHeight - 10);
+            card.style.top = top + 'px';
+        }
+        function hideMiniProfile() { document.getElementById('mini-profile').style.display = 'none'; }
+        function mentionUser() {
+            const input = document.getElementById('chat-input');
+            input.value = (input.value + ' @' + document.getElementById('mini-profile').dataset.user).trim();
+            input.focus();
+            hideMiniProfile();
+        }
+        // click anywhere else, or hit escape, to close the card
+        document.addEventListener('click', (e) => {
+            const card = document.getElementById('mini-profile');
+            if (card.style.display !== 'block') return;
+            if (card.contains(e.target) || e.target.closest('.username, .member-item')) return;
+            hideMiniProfile();
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideMiniProfile(); });
+    </script>
 
     <script>
         // 1. CONSTANTS & VARIABLES
@@ -1013,7 +1302,7 @@
                 <div class="msg-content">
                     <div class="msg-header">
                         <span class="role-tag" style="color:${rColor}">${data.role ? data.role.toUpperCase() : 'USER'}</span>
-                        <span class="username ${nameClass}" style="color:${data.color || rColor}" onclick="handleUserClick('${data.username.replace(/'/g, "\\'")}')">${data.username}</span>
+                        <span class="username ${nameClass}" style="color:${data.color || rColor}" onclick="handleUserClick('${data.username.replace(/'/g, "\\'")}', this)">${data.username}</span>
                         ${badge}
                         <span class="msg-timestamp">${time}</span>
                     </div>
@@ -1061,8 +1350,11 @@
             location.reload();
         }
 
-        function renderManager() {
-            const list = document.getElementById('account-list'); list.innerHTML='';
+        // same list is drawn on the login screen and in the settings tab
+        function renderManager(target = 'account-list') {
+            const list = document.getElementById(target);
+            if (!list) return;
+            list.innerHTML = '';
             savedSessions.forEach(u => {
                 const acc = accounts[u];
                 if (!acc) return;
@@ -1070,18 +1362,19 @@
                 el.innerHTML = `
                     <div class="acc-info">
                         <div class="acc-name">${acc.data.username} <span style="color:#666; font-size:0.7em">[${acc.data.role}]</span></div>
+                        <div class="acc-id">ID ${userTag(acc.data.username)}</div>
                     </div>
-                    <button class="acc-btn-del" onclick="event.stopPropagation(); deleteAccount('${u}')">DEL</button>
+                    <button class="acc-btn-del" onclick="event.stopPropagation(); deleteAccount('${u}', '${target}')">DEL</button>
                 `;
                 el.onclick = () => switchAccount(u);
                 list.appendChild(el);
             });
         }
-        function deleteAccount(u) {
+        function deleteAccount(u, target = 'account-list') {
             if(!confirm("Remove?")) return;
             savedSessions = savedSessions.filter(user => user !== u);
             localStorage.setItem('fork_my_accounts', JSON.stringify(savedSessions));
-            renderManager();
+            renderManager(target);
         }
         function resetAllData() { if(confirm("FACTORY RESET?")) { localStorage.clear(); location.reload(); } }
         
@@ -1287,6 +1580,8 @@
                 let badge = '';
                 if (u.toLowerCase() === OWNER_NAME) badge = '👑';
                 div.innerHTML = `<span class="status-dot online"></span> <span class="member-name">${badge} ${u}</span>`;
+                div.style.cursor = 'pointer';
+                div.onclick = (e) => handleUserClick(u, e.currentTarget);
                 list.appendChild(div);
             });
         }
@@ -1957,7 +2252,12 @@
             alert("Grant sent.");
         }
         
-        function handleUserClick(name) { document.getElementById('target-user').value = name; }
+        function handleUserClick(name, el) {
+            // keeps filling the admin target box, then pops their profile card
+            const box = document.getElementById('target-user');
+            if(box) box.value = name;
+            showMiniProfile(name, el);
+        }
 
         function makeDrag(elmnt) {
             let pos1=0,pos2=0,pos3=0,pos4=0;
