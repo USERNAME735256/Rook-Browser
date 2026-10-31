@@ -1,104 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rook Browser</title>
+    <title>VTech's Browser</title>
     <!-- Official libcurl.js WebAssembly Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/libcurl.js@latest/libcurl_full.js"></script>
 
-    <button id="chat-widget-btn" onclick="toggleChat()">💬 Chat</button>
-
-    <div id="chat-widget-container">
-    <div id="chat-drag-handle">Global Chat (Fullscreen)</div>
-    <iframe id="chat-iframe" src="Rook.zip/chat.html"></iframe>
-</div>
-
-<script>
-    const container = document.getElementById('chat-widget-container');
-    const btn = document.getElementById('chat-widget-btn');
-
-   
-        function toggleChat() {
-        if (container.style.display === 'none' || !container.style.display) {
-            container.style.display = 'flex';
-            btn.innerHTML = '❌ Close';
-            btn.style.backgroundColor = '#ff5252';
-            document.body.style.overflow = 'hidden'; // Lock background scrolling
-        } else {
-            container.style.display = 'none';
-            btn.innerHTML = '💬 Chat';
-            btn.style.backgroundColor = '#4a90e2';
-            document.body.style.overflow = ''; // Unlock background scrolling
-        }
-    }
-    </script>
-
-
-
-
     <style>
-#chat-widget-btn:hover { transform: scale(1.05); }
-
-
-    #chat-iframe {
-        flex: 1;
-        width: 100%;
-        border: none;
-        pointer-events: auto; 
-    }
-
- #chat-widget-container {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        
-        background: #1e1e24;
-        z-index: 9998;
-        
-        display: none;
-        flex-direction: column;
-    }
-
-         #chat-widget-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #4a90e2; 
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 15px 25px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-
-
+        /* ==========================================================================
+           1. CORE THEMES & CSS VARIABLES
+           ========================================================================== */
         :root {
-            --bg-dark: #202124;
-            --tab-bg: #292a2d;
-            --tab-active: #35363a;
-            --toolbar-bg: #35363a;
-            --input-bg: #202124;
-            --input-border: #4a4d51;
-            --text-main: #e8eaed;
-            --text-subtle: #9aa0a6;
-            --accent-blue: #8ab4f8;
-            --border-color: #4a4d51;
+            /* Glint FX Variables - Default to Way Slower sweep speed */
+            --glint-color: rgba(0, 240, 255, 0.75);
+            --glint-speed: 10s;
+            --glint-opacity: 1;
+            --glint-display: block;
+
+            /* Default Theme: Midnight Obsidian (VTech High-Tech) */
+            --bg-dark: #090a0f;
+            --tab-bg: #12141d;
+            --tab-active: #1c202e;
+            --toolbar-bg: #10121a;
+            --input-bg: #06070a;
+            --input-border: #232838;
+            --text-main: #f0f4fc;
+            --text-subtle: #8a94a6;
+            --accent-blue: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.25);
+            --border-color: #232838;
             --status-online: #81c995;
             --status-offline: #f28b82;
             --status-warn: #fdd663;
-            --console-bg: #18191c;
+            --console-bg: #050608;
+            --glass-bg: rgba(16, 18, 26, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-bg: #12141d;
+            --spooky-orange: #ff7700;
+            --spooky-purple: #9d4edd;
+        }
+
+        /* Halloween Bat & Spooky Mode */
+        [data-theme="spooky"] {
+            --bg-dark: #07050d;
+            --tab-bg: #140d24;
+            --tab-active: #22143b;
+            --toolbar-bg: #0f0a1c;
+            --input-bg: #05030a;
+            --input-border: #ff770055;
+            --text-main: #fff5ea;
+            --text-subtle: #bba4d6;
+            --accent-blue: #ff7700;
+            --accent-glow: rgba(255, 119, 0, 0.35);
+            --border-color: #9d4edd44;
+            --console-bg: #040208;
+            --card-bg: #140d24;
+        }
+
+        /* Halloween Spooky Mode */
+        [data-theme="spooky"] {
+            --bg-dark: #0b0712;
+            --tab-bg: #180f26;
+            --tab-active: #2a1942;
+            --toolbar-bg: #120b1f;
+            --input-bg: #07040d;
+            --input-border: #ff770055;
+            --text-main: #fff5ea;
+            --text-subtle: #c1a8d9;
+            --accent-blue: #ff7700;
+            --accent-glow: rgba(255, 119, 0, 0.35);
+            --border-color: #9d4edd44;
+            --console-bg: #050308;
+            --card-bg: #180f26;
+        }
+
+        /* Arc Dark Theme */
+        [data-theme="arc-dark"] {
+            --bg-dark: #121420;
+            --tab-bg: #1a1d2e;
+            --tab-active: #262a42;
+            --toolbar-bg: #161928;
+            --input-bg: #0d0f18;
+            --input-border: #333959;
+            --text-main: #f1f3fe;
+            --text-subtle: #8e95b3;
+            --accent-blue: #7c5cff;
+            --accent-glow: rgba(124, 92, 255, 0.3);
+            --border-color: #2b304d;
+            --console-bg: #0a0b12;
+            --card-bg: #1a1d2e;
+        }
+
+        /* Cyberpunk Neon Theme */
+        [data-theme="cyberpunk"] {
+            --bg-dark: #090710;
+            --tab-bg: #151024;
+            --tab-active: #23183d;
+            --toolbar-bg: #120e20;
+            --input-bg: #06040b;
+            --input-border: #ff007f55;
+            --text-main: #ffffff;
+            --text-subtle: #b3a5d9;
+            --accent-blue: #00f0ff;
+            --accent-glow: rgba(0, 240, 255, 0.35);
+            --border-color: #ff007f33;
+            --console-bg: #050308;
+            --card-bg: #151024;
+        }
+
+        /* Secret VTech Overdrive Theme (Unlocked via Konami Code) */
+        [data-theme="vtech-overdrive"] {
+            --bg-dark: #000a06;
+            --tab-bg: #021a10;
+            --tab-active: #053320;
+            --toolbar-bg: #01140c;
+            --input-bg: #000503;
+            --input-border: #00ff8855;
+            --text-main: #e6fffa;
+            --text-subtle: #66cca0;
+            --accent-blue: #00ff88;
+            --accent-glow: rgba(0, 255, 136, 0.4);
+            --border-color: #00ff8833;
+            --console-bg: #000302;
+            --card-bg: #021a10;
         }
 
         * {
@@ -108,29 +133,148 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* SPOOKY BACKGROUND CANVAS PARTICLES (FIXED OVERLAY) */
+        #spooky-particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* BARREL ROLL EASTER EGG ANIMATION */
+        .barrel-roll {
+            animation: barrelRoll 1.8s ease-in-out;
+        }
+
+        @keyframes barrelRoll {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* FIXED CORNER PUMPKINS (HALLOWEEN MODE) */
+        .corner-pumpkin {
+            position: fixed;
+            bottom: 14px;
+            font-size: 46px;
+            z-index: 99;
+            pointer-events: none;
+            display: none;
+            filter: drop-shadow(0 0 14px rgba(255, 119, 0, 0.8));
+            animation: pumpkinGlow 3s infinite ease-in-out alternate;
+        }
+
+        .left-pumpkin { left: 18px; transform: rotate(-12deg); }
+        .right-pumpkin { right: 110px; transform: rotate(12deg); }
+
+        @keyframes pumpkinGlow {
+            0% { filter: drop-shadow(0 0 8px rgba(255, 119, 0, 0.4)) scale(1); }
+            100% { filter: drop-shadow(0 0 24px rgba(255, 119, 0, 0.95)) scale(1.08); }
+        }
+
+        [data-theme="spooky"] .corner-pumpkin {
+            display: block;
+        }
+
+        /* ==========================================================================
+           2. GLINT & SPOOKY PARTICLE ENGINE
+           ========================================================================== */
+        .glint-fx {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glint-fx::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 80%;
+            height: 200%;
+            background: linear-gradient(
+                115deg,
+                transparent 0%,
+                transparent 40%,
+                var(--glint-color) 50%,
+                transparent 60%,
+                transparent 100%
+            );
+            transform: rotate(25deg);
+            pointer-events: none;
+            opacity: var(--glint-opacity);
+            display: var(--glint-display);
+            animation: glintSweep var(--glint-speed) infinite ease-in-out;
+        }
+
+        @keyframes glintSweep {
+            0% { left: -150%; }
+            45% { left: 160%; }
+            100% { left: 160%; }
+        }
+        .home-v8-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .home-v8-wrapper:hover {
+            transform: scale(1.06);
+        }
+
+        .home-v8-icon {
+            width: 110px;
+            height: 90px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 6px 20px var(--accent-glow));
+        }
+
+        .v8-badge-text {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2.5px;
+            color: var(--accent-blue);
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-blue);
+            padding: 3px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        /* ==========================================================================
+           3. TOP CONTROL BAR & TABS
+           ========================================================================== */
         #top-bar {
             background-color: var(--bg-dark);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 10px 0 10px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+            padding: 8px 12px 0 12px;
+            border-bottom: 1px solid var(--border-color);
             user-select: none;
+            backdrop-filter: blur(12px);
+            z-index: 100;
         }
 
         #tab-bar-container {
             display: flex;
             align-items: flex-end;
-            gap: 4px;
+            gap: 6px;
             overflow-x: auto;
             flex: 1;
             scrollbar-width: none;
@@ -144,27 +288,36 @@
             background-color: var(--tab-bg);
             color: var(--text-subtle);
             padding: 8px 14px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 12px;
-            width: 180px;
-            min-width: 120px;
+            width: 190px;
+            min-width: 130px;
             cursor: pointer;
-            transition: background 0.15s ease, color 0.15s ease;
+            transition: all 0.2s ease;
             position: relative;
+            border: 1px solid transparent;
+            border-bottom: none;
+        }
+
+        .tab:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
         }
 
         .tab.active {
             background-color: var(--tab-active);
             color: var(--text-main);
+            border-color: var(--glass-border);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .tab-icon {
-            width: 15px;
-            height: 15px;
+            width: 16px;
+            height: 16px;
             flex-shrink: 0;
             fill: var(--accent-blue);
         }
@@ -178,71 +331,130 @@
         }
 
         .tab-close {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             color: var(--text-subtle);
+            transition: all 0.15s ease;
         }
 
         .tab-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--text-main);
+            background: rgba(255, 82, 82, 0.25);
+            color: #ff5252;
         }
 
         .new-tab-btn {
             background: transparent;
             border: none;
             color: var(--text-subtle);
-            font-size: 18px;
+            font-size: 20px;
             padding: 4px 10px;
             border-radius: 50%;
             cursor: pointer;
             margin-bottom: 2px;
             flex-shrink: 0;
+            transition: all 0.15s ease;
         }
 
         .new-tab-btn:hover {
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-main);
+            transform: scale(1.1);
         }
 
         .top-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 4px;
-            padding-left: 10px;
+            padding-left: 12px;
+        }
+
+        /* ACCOUNT & CANDY BADGES */
+        .candy-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 119, 0, 0.15);
+            border: 1px solid var(--spooky-orange);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffb703;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .candy-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 12px rgba(255, 119, 0, 0.4);
+        }
+
+        .account-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .account-badge:hover {
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* LIVE CLOCK DISPLAY */
+        .live-clock-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .live-clock-badge svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--accent-blue);
         }
 
         .btn-top-action {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 5px 11px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-top-action:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.12);
             border-color: var(--accent-blue);
-        }
-
-        .btn-top-action.active {
-            background: rgba(138, 180, 248, 0.15);
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
+            transform: translateY(-1px);
         }
 
         .status-badge {
@@ -251,7 +463,6 @@
             gap: 6px;
             font-size: 11px;
             color: var(--text-subtle);
-            margin-left: 4px;
         }
 
         .status-dot {
@@ -259,18 +470,23 @@
             height: 8px;
             border-radius: 50%;
             background-color: var(--status-warn);
+            box-shadow: 0 0 8px var(--status-warn);
+            transition: all 0.3s ease;
         }
 
-        .status-dot.online { background-color: var(--status-online); }
-        .status-dot.offline { background-color: var(--status-offline); }
+        .status-dot.online { background-color: var(--status-online); box-shadow: 0 0 8px var(--status-online); }
+        .status-dot.offline { background-color: var(--status-offline); box-shadow: 0 0 8px var(--status-offline); }
 
+        /* ==========================================================================
+           4. NAVIGATION BAR & OMNIBOX
+           ========================================================================== */
         #nav-bar {
             background-color: var(--toolbar-bg);
-            padding: 6px 12px;
+            padding: 8px 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .icon-btn {
@@ -279,16 +495,17 @@
             color: var(--text-main);
             width: 32px;
             height: 32px;
-            border-radius: 50%;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: background 0.15s ease, transform 0.1s ease;
         }
 
         .icon-btn:hover:not(:disabled) {
             background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
         }
 
         .icon-btn:disabled {
@@ -305,25 +522,33 @@
         .omnibox {
             flex: 1;
             background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 20px;
             display: flex;
             align-items: center;
-            padding: 0 14px;
-            height: 36px;
-            transition: box-shadow 0.15s ease, background-color 0.15s ease;
+            padding: 0 16px;
+            height: 38px;
+            transition: all 0.2s ease;
         }
 
         .omnibox:focus-within {
-            background-color: #18191b;
-            box-shadow: 0 0 0 2px var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            background-color: var(--bg-dark);
         }
 
-        .rook-logo-small {
-            width: 18px;
-            height: 18px;
+        .vtech-logo-small {
+            width: 20px;
+            height: 20px;
             fill: var(--accent-blue);
             margin-right: 10px;
             flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .vtech-logo-small:hover {
+            transform: scale(1.2) rotate(10deg);
         }
 
         .omnibox input {
@@ -335,136 +560,158 @@
             outline: none;
         }
 
+        /* FLOATING CANDY REWARD TOAST */
+        #candy-toast-container {
+            position: fixed;
+            top: 100px;
+            right: 24px;
+            z-index: 10000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .candy-toast {
+            background: rgba(255, 119, 0, 0.95);
+            color: #0b0712;
+            font-weight: 800;
+            font-size: 13px;
+            padding: 10px 18px;
+            border-radius: 24px;
+            box-shadow: 0 8px 24px rgba(255, 119, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: toastPop 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes toastPop {
+            0% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+            15% { opacity: 1; transform: translateY(0) scale(1.05); }
+            80% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+        }
+
+        /* ==========================================================================
+           5. QUICK SETTINGS / WISP POPUP MODAL
+           ========================================================================== */
         .wisp-popup {
             display: none;
             position: absolute;
-            right: 12px;
-            top: 48px;
-            background-color: var(--tab-bg);
+            right: 16px;
+            top: 54px;
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            width: 350px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            border-radius: 14px;
+            padding: 20px;
+            width: 380px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6);
             z-index: 1000;
+            backdrop-filter: blur(16px);
+            animation: fadeInDown 0.2s ease-out;
         }
 
-        .wisp-popup.active {
-            display: block;
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .wisp-popup.active { display: block; }
 
         .popup-section {
-            margin-bottom: 14px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .popup-section:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
+        .popup-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
 
         .wisp-popup label {
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
             color: var(--text-subtle);
             display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
-        .wisp-popup input[type="text"] {
+        .wisp-popup input[type="text"], .wisp-popup select {
             width: 100%;
             background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 8px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 9px 12px;
             color: var(--text-main);
             font-size: 12px;
             outline: none;
             margin-bottom: 8px;
         }
 
-        .wisp-popup input[type="text"]:focus {
-            border-color: var(--accent-blue);
-        }
-
         .toggle-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 6px 0;
             cursor: pointer;
         }
 
-        .toggle-label {
-            font-size: 12px;
-            color: var(--text-main);
-            font-weight: 500;
-        }
+        .toggle-label { font-size: 13px; color: var(--text-main); font-weight: 500; }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 36px;
-            height: 20px;
+            width: 38px;
+            height: 22px;
         }
 
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
 
         .slider {
             position: absolute;
             cursor: pointer;
             inset: 0;
-            background-color: var(--border-color);
-            transition: .2s;
+            background-color: var(--input-border);
+            transition: .25s;
             border-radius: 20px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px;
-            width: 14px;
+            height: 16px;
+            width: 16px;
             left: 3px;
             bottom: 3px;
             background-color: white;
-            transition: .2s;
+            transition: .25s;
             border-radius: 50%;
         }
 
-        input:checked + .slider {
-            background-color: var(--accent-blue);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(16px);
-        }
+        input:checked + .slider { background-color: var(--accent-blue); }
+        input:checked + .slider:before { transform: translateX(16px); }
 
         .btn-action {
             width: 100%;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             background: var(--accent-blue);
-            color: #121212;
-            font-weight: 600;
+            color: #0b0712;
+            font-weight: 700;
             font-size: 12px;
-            padding: 8px;
+            padding: 10px;
             cursor: pointer;
-            margin-top: 4px;
-            transition: opacity 0.15s;
+            margin-top: 6px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px var(--accent-glow);
         }
 
-        .btn-action:hover {
-            opacity: 0.9;
-        }
+        .btn-action:hover { opacity: 0.95; transform: translateY(-1px); }
 
+        /* ==========================================================================
+           6. MAIN VIEWS & HOME PAGE CONTAINER
+           ========================================================================== */
         #views-container {
             flex: 1;
             position: relative;
@@ -481,9 +728,7 @@
             height: 100%;
         }
 
-        .tab-view.active {
-            display: flex;
-        }
+        .tab-view.active { display: flex; }
 
         .home-container {
             flex: 1;
@@ -491,58 +736,85 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 30px 20px;
             background-color: var(--bg-dark);
             user-select: none;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .home-greeting {
+            font-size: 15px;
+            color: var(--accent-blue);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .home-clock-large {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         .home-logo-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
-        .home-rook-icon {
-            width: 80px;
-            height: 80px;
+        .home-vtech-icon {
+            width: 88px;
+            height: 88px;
             fill: var(--accent-blue);
-            margin-bottom: 12px;
-            filter: drop-shadow(0 4px 12px rgba(138, 180, 248, 0.25));
+            margin-bottom: 14px;
+            filter: drop-shadow(0 6px 20px var(--accent-glow));
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .home-vtech-icon:hover {
+            transform: scale(1.08) rotate(4deg);
         }
 
         .home-title {
-            font-size: 32px;
-            font-weight: 600;
+            font-size: 36px;
+            font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--text-main);
         }
 
         .home-search-box {
             width: 100%;
-            max-width: 580px;
-            background-color: #303134;
+            max-width: 620px;
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 24px;
+            border-radius: 28px;
             display: flex;
             align-items: center;
-            padding: 0 16px;
-            height: 48px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            padding: 0 20px;
+            height: 52px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
             transition: all 0.2s ease;
         }
 
         .home-search-box:hover, .home-search-box:focus-within {
-            background-color: #35363a;
-            border-color: #5f6368;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: var(--accent-blue);
+            box-shadow: 0 8px 30px var(--accent-glow);
+            transform: translateY(-1px);
         }
 
         .home-search-icon {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: var(--text-subtle);
-            margin-right: 12px;
+            margin-right: 14px;
         }
 
         .home-search-box input {
@@ -559,30 +831,31 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px;
-            margin-top: 28px;
-            max-width: 580px;
+            margin-top: 32px;
+            max-width: 680px;
         }
 
         .shortcut-pill {
-            background-color: rgba(255, 255, 255, 0.06);
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 22px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .shortcut-pill:hover {
             background-color: rgba(255, 255, 255, 0.12);
             border-color: var(--accent-blue);
             color: var(--accent-blue);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
         .iframe-container {
@@ -593,9 +866,7 @@
             position: relative;
         }
 
-        .iframe-container.active {
-            display: block;
-        }
+        .iframe-container.active { display: block; }
 
         iframe.browser-iframe {
             width: 100%;
@@ -607,8 +878,8 @@
         .loader-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(32, 33, 36, 0.85);
-            backdrop-filter: blur(4px);
+            background: rgba(9, 10, 15, 0.88);
+            backdrop-filter: blur(6px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -620,83 +891,141 @@
             transition: opacity 0.2s ease;
         }
 
-        .loader-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .loader-overlay.active { opacity: 1; pointer-events: auto; }
 
         .spinner {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border: 3px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             border-top-color: var(--accent-blue);
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loader-text { font-size: 13px; color: var(--text-main); font-weight: 500; }
+
+        /* ==========================================================================
+           7. CHAT WIDGET & OVERLAY
+           ========================================================================== */
+        #chat-widget-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: var(--accent-blue);
+            color: #0b0712;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
         }
 
-        .loader-text {
+        #chat-widget-btn:hover {
+            transform: scale(1.06) translateY(-2px);
+            box-shadow: 0 10px 25px var(--accent-glow);
+        }
+
+        #chat-widget-container {
+            position: fixed;
+            bottom: 80px;
+            right: 24px;
+            width: 420px;
+            height: 580px;
+            max-width: calc(100vw - 32px);
+            max-height: calc(100vh - 120px);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+            z-index: 9998;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(16px);
+            animation: slideUpChat 0.25s ease-out;
+        }
+
+        @keyframes slideUpChat {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        #chat-drag-handle {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 600;
             font-size: 13px;
             color: var(--text-main);
-            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+            user-select: none;
         }
 
+        #chat-iframe { flex: 1; width: 100%; border: none; background: #18191c; }
+
+        /* ==========================================================================
+           8. LOG DRAWER & CONSOLE
+           ========================================================================== */
         #log-drawer {
             display: none;
-            height: 180px;
+            height: 200px;
             background-color: var(--console-bg);
             border-top: 1px solid var(--border-color);
-            font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 11px;
+            font-family: 'Consolas', 'Fira Code', 'Courier New', monospace;
+            font-size: 12px;
             flex-direction: column;
             z-index: 200;
         }
 
-        #log-drawer.active {
-            display: flex;
-        }
+        #log-drawer.active { display: flex; }
 
         #log-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 12px;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.4);
             border-bottom: 1px solid var(--border-color);
             color: var(--text-subtle);
             font-weight: 600;
             user-select: none;
         }
 
-        .btn-clear-logs {
+        .log-filter-box { display: flex; align-items: center; gap: 8px; }
+
+        .log-filter-btn {
             background: transparent;
-            border: none;
+            border: 1px solid var(--border-color);
             color: var(--text-subtle);
-            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
             font-size: 11px;
+            cursor: pointer;
         }
 
-        .btn-clear-logs:hover {
-            color: var(--text-main);
-        }
+        .log-filter-btn.active { background: var(--accent-blue); color: #0b0712; border-color: var(--accent-blue); }
 
         #log-content {
             flex: 1;
             overflow-y: auto;
-            padding: 8px 12px;
+            padding: 10px 14px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
         }
 
-        .log-entry {
-            line-height: 1.4;
-            word-break: break-all;
-        }
-
+        .log-entry { line-height: 1.4; word-break: break-all; }
         .log-entry.info { color: #8ab4f8; }
         .log-entry.warn { color: #fdd663; }
         .log-entry.error { color: #f28b82; }
@@ -705,49 +1034,119 @@
 </head>
 <body>
 
+    <!-- SPOOKY BACKGROUND CANVAS PARTICLES (FLYING BATS) -->
+    <canvas id="spooky-particle-canvas"></canvas>
+
+    <!-- FIXED GLOWING CORNER PUMPKINS -->
+    <div class="corner-pumpkin left-pumpkin" id="pumpkin-left">🎃</div>
+    <div class="corner-pumpkin right-pumpkin" id="pumpkin-right">🎃</div>
+
+    <!-- FLOATING CANDY TOAST CONTAINER -->
+    <div id="candy-toast-container"></div>
+
+    <!-- TOP CONTROL BAR -->
     <div id="top-bar">
         <div id="tab-bar-container"></div>
         <button class="new-tab-btn" id="btn-add-tab" title="New Tab">+</button>
 
         <div class="top-controls">
-            <button class="btn-top-action" id="btn-wisp-toggle" title="Settings & Network">
+            <!-- CANDY COUNTER BADGE -->
+            <div class="candy-badge" id="top-candy-badge" onclick="openShopTab()" title="Candy Loot Balance - Click to Open Shop">
+                <span>🍬</span>
+                <span id="top-candy-count">0</span>
+            </div>
+
+            <!-- USER ACCOUNT BADGE -->
+            <div class="account-badge" id="top-account-badge" onclick="openAccountTab()" title="User Account Profile">
+                <span id="top-avatar">🎃</span>
+                <span id="top-username">Guest</span>
+            </div>
+
+            <!-- LIVE CLOCK -->
+            <div class="live-clock-badge" id="top-clock-badge" title="Current Time">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                <span id="top-clock-text">12:00 PM</span>
+            </div>
+
+            <!-- SPOOKY HALLOWEEN TOGGLE -->
+            <button class="btn-top-action" id="btn-toggle-spooky" title="Toggle Halloween Spooky Mode">
+                🎃 Spooky Mode
+            </button>
+
+            <button class="btn-top-action glint-fx" id="btn-wisp-toggle" title="Settings & Network">
                 ⚙️ Settings
             </button>
             <button class="btn-top-action" id="btn-toggle-logs" title="Toggle Console Logs">
-                &gt;_ Console Logs
+                &gt;_ Console
             </button>
             <span class="status-badge">
-                <span class="status-dot" id="wisp-status-dot"></span>
+                <span class="status-dot" id="wisp-status-dot" title="Network Socket Status"></span>
             </span>
         </div>
     </div>
 
+    <!-- QUICK SETTINGS POPUP MENU -->
     <div class="wisp-popup" id="wisp-popup">
         <div class="popup-section">
-            <label for="input-wisp">Active Wisp Server</label>
+            <label for="input-wisp">Active Wisp Proxy Endpoint</label>
             <input type="text" id="input-wisp" value="wss://wisp.mercurywork.shop/" placeholder="wss://wisp-server/" list="wisp-presets" />
             <datalist id="wisp-presets">
-                <option value="wss://wisp.mercurywork.shop/">Mercury Workshop Node (Primary Default)</option>
+                <option value="wss://wisp.mercurywork.shop/">Mercury Workshop Node</option>
                 <option value="wss://wisp.webmc.fun/">WebMC Public Proxy</option>
                 <option value="wss://anura.mercurywork.shop/wisp/">Anura Wisp Node</option>
                 <option value="wss://wisp.pizzaproxy.org/">PizzaProxy Node</option>
-                <option value="wss://invisiproxy.com">Reccomendedddd</option>
             </datalist>
-            <button class="btn-action" id="btn-save-wisp">Save & Connect</button>
+            <button class="btn-action glint-fx" id="btn-save-wisp">Save & Connect</button>
         </div>
 
         <div class="popup-section">
-            <label>Privacy & Security Controls</label>
+            <label>WebSocket Failover Mode</label>
+            <select id="select-wisp-mode">
+                <option value="reroll">Auto-Reroll (Auto-Switch Node on Failure)</option>
+                <option value="stay">Stay & Prompt (Stop and Let Me Choose)</option>
+            </select>
+        </div>
+
+        <div class="popup-section">
+            <label>Glint FX Speed & Palette</label>
+            <select id="select-quick-glint-speed" onchange="updateGlintSpeed(this.value)">
+                <option value="slowest">Super Slow (14s)</option>
+                <option value="slow" selected>Way Slower (10s Default)</option>
+                <option value="normal">Normal (5s)</option>
+                <option value="fast">Fast (2.5s)</option>
+            </select>
+            <select id="select-quick-glint-color" style="margin-top:6px;">
+                <option value="ghost">Ghost Glow (Halloween)</option>
+                <option value="pumpkin">Pumpkin Spice (Halloween)</option>
+                <option value="poison">Witch Poison (Halloween)</option>
+                <option value="cyan">Neon Cyan (VTech)</option>
+                <option value="blue">Arc Blue</option>
+                <option value="purple">Purple Dusk</option>
+                <option value="gold">Sunset Gold</option>
+            </select>
+        </div>
+
+        <div class="popup-section">
+            <label>Quick Controls</label>
             <label class="toggle-row" for="toggle-webrtc">
-                <span class="toggle-label">Disable WebRTC (IP Leak Protection)</span>
+                <span class="toggle-label">WebRTC IP Leak Protection</span>
                 <span class="toggle-switch">
                     <input type="checkbox" id="toggle-webrtc" checked />
                     <span class="slider"></span>
                 </span>
             </label>
+            <label class="toggle-row" for="toggle-glint-quick">
+                <span class="toggle-label">Enable Glint Shimmer Effects</span>
+                <span class="toggle-switch">
+                    <input type="checkbox" id="toggle-glint-quick" checked />
+                    <span class="slider"></span>
+                </span>
+            </label>
         </div>
+        <button class="btn-action" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);" onclick="openSettingsTab()">Open Full Settings Hub (vtech://settings)</button>
     </div>
 
+    <!-- MAIN NAVIGATION BAR -->
     <div id="nav-bar">
         <button class="icon-btn" id="btn-back" title="Back" disabled>
             <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
@@ -760,27 +1159,236 @@
         </button>
 
         <div class="omnibox">
-            <svg class="rook-logo-small" viewBox="0 0 24 24">
-                <path d="M19 22H5v-2h14v2zm-1-3H6v-2h12v2zm1-11v2h-2V8h-2v2h-2V8h-2v2H9V8H7v2H5V8l2-3h10l2 3zM7 15h10v-3H7v3z"/>
+            <svg class="vtech-logo-small" id="nav-vtech-logo" viewBox="0 0 24 24" title="Click 5 times for a secret!">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
-            <input type="text" id="input-url" placeholder="Search with Rook or enter address" />
+            <input type="text" id="input-url" placeholder="Search with VTech or type URL (e.g. vtech://snake, vtech://shop, vtech://settings)" />
         </div>
     </div>
 
+    <!-- TAB VIEWS CONTAINER -->
     <div id="views-container"></div>
 
-    
+    <!-- FLOATING CHAT OVERLAY -->
+    <button id="chat-widget-btn" class="glint-fx" onclick="toggleChat()">💬 Chat</button>
+    <div id="chat-widget-container">
+        <div id="chat-drag-handle">
+            <span>💬 Global VTech Chat</span>
+            <button style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer;" onclick="toggleChat()">✕</button>
+        </div>
+        <iframe id="chat-iframe" src="Rook.zip/chat.html"></iframe>
+    </div>
 
+    <!-- CONSOLE LOG DRAWER -->
     <div id="log-drawer">
         <div id="log-header">
             <span>CONSOLE LOGS</span>
-            <button class="btn-clear-logs" id="btn-clear-logs">Clear Console</button>
+            <div class="log-filter-box">
+                <button class="log-filter-btn active" onclick="filterLogs('all', this)">All</button>
+                <button class="log-filter-btn" onclick="filterLogs('info', this)">Info</button>
+                <button class="log-filter-btn" onclick="filterLogs('warn', this)">Warn</button>
+                <button class="log-filter-btn" onclick="filterLogs('error', this)">Error</button>
+            </div>
+            <button id="btn-clear-logs" style="background:transparent; border:none; color:var(--text-subtle); cursor:pointer;">Clear Console</button>
         </div>
         <div id="log-content"></div>
     </div>
 
     <script>
-        // UI Elements
+        /* ==========================================================================
+           9. USER ACCOUNTS & CANDY LOOT SYSTEM (LOCALSTORAGE)
+           ========================================================================== */
+        const DEFAULT_ACCOUNTS = [
+            {
+                id: 'acc_vtechluver',
+                username: 'vtechluver',
+                password: 'dev',
+                avatar: '👑',
+                candies: 9999,
+                level: 99,
+                xp: 99999,
+                snakeHighScore: 999,
+                role: 'Developer',
+                isBanned: false,
+                visitedPages: 0,
+                achievements: ['welcome_vtech', 'dev_master'],
+                unlockedAvatars: ['🎃', '👻', '🦇', '🧙‍♂️', '💀', '👾', '👑'],
+                unlockedGlints: ['ghost', 'pumpkin', 'poison', 'cyan', 'blue', 'purple', 'gold']
+            },
+            {
+                id: 'default_guest',
+                username: 'GhostExplorer',
+                password: 'guestpassword',
+                avatar: '🎃',
+                candies: 50,
+                level: 1,
+                xp: 0,
+                snakeHighScore: 0,
+                role: 'User',
+                isBanned: false,
+                visitedPages: 0,
+                achievements: ['welcome_vtech'],
+                unlockedAvatars: ['🎃', '👻', '🦇'],
+                unlockedGlints: ['ghost', 'cyan', 'blue']
+            }
+        ];
+
+        let accounts = loadAccounts();
+        let activeAccountId = localStorage.getItem('vtech_active_account_id') || 'default_guest';
+
+        function loadAccounts() {
+            try {
+                const stored = localStorage.getItem('vtech_accounts_v1');
+                return stored ? JSON.parse(stored) : [...DEFAULT_ACCOUNTS];
+            } catch (e) {
+                return [...DEFAULT_ACCOUNTS];
+            }
+        }
+
+        function saveAccounts() {
+            localStorage.setItem('vtech_accounts_v1', JSON.stringify(accounts));
+            localStorage.setItem('vtech_active_account_id', activeAccountId);
+            updateTopAccountBadge();
+        }
+
+        function getActiveAccount() {
+            let acc = accounts.find(a => a.id === activeAccountId);
+            if (!acc) {
+                acc = accounts[0];
+                activeAccountId = acc.id;
+            }
+            return acc;
+        }
+
+        function loginUser(username, password) {
+            const acc = accounts.find(a => a.username.toLowerCase() === username.trim().toLowerCase());
+            if (!acc) return { success: false, message: "Account not found!" };
+            if (acc.password !== password) return { success: false, message: "Incorrect password!" };
+            if (acc.isBanned) return { success: false, message: "This account has been banned by an administrator." };
+
+            activeAccountId = acc.id;
+            saveAccounts();
+            return { success: true, message: `Welcome back, ${acc.username}!`, account: acc };
+        }
+
+        function registerUser(username, password) {
+            const cleanUser = username.trim();
+            if (!cleanUser || !password) return { success: false, message: "Username and password required!" };
+            if (accounts.some(a => a.username.toLowerCase() === cleanUser.toLowerCase())) {
+                return { success: false, message: "Username is already taken!" };
+            }
+
+            const isDev = cleanUser.toLowerCase() === 'vtechluver';
+
+            const newAcc = {
+                id: 'acc_' + Date.now(),
+                username: cleanUser,
+                password: password,
+                avatar: isDev ? '👑' : '🎃',
+                candies: isDev ? 9999 : 50,
+                level: isDev ? 99 : 1,
+                xp: 0,
+                snakeHighScore: 0,
+                role: isDev ? 'Developer' : 'User',
+                isBanned: false,
+                visitedPages: 0,
+                achievements: ['welcome_vtech'],
+                unlockedAvatars: isDev ? ['🎃', '👻', '🦇', '🧙‍♂️', '💀', '👾', '👑'] : ['🎃', '👻'],
+                unlockedGlints: isDev ? ['ghost', 'pumpkin', 'poison', 'cyan', 'blue', 'purple', 'gold'] : ['ghost', 'cyan']
+            };
+
+            accounts.push(newAcc);
+            activeAccountId = newAcc.id;
+            saveAccounts();
+            return { success: true, message: `Account created! Welcome ${newAcc.username}!`, account: newAcc };
+        }
+
+        function addCandies(amount, reason = "Browsing Reward") {
+            const acc = getActiveAccount();
+            if (acc.isBanned) return;
+            acc.candies = (acc.candies || 0) + amount;
+            acc.xp = (acc.xp || 0) + amount * 2;
+
+            if (acc.xp >= acc.level * 100) {
+                acc.level++;
+                showCandyToast(`🎉 LEVEL UP! You reached Level ${acc.level}!`);
+            }
+
+            saveAccounts();
+            showCandyToast(`+${amount} 🍬 ${reason}`);
+        }
+
+        function showCandyToast(msg) {
+            const container = document.getElementById('candy-toast-container');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = 'candy-toast';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2600);
+        }
+
+        function updateTopAccountBadge() {
+            const acc = getActiveAccount();
+            const countEl = document.getElementById('top-candy-count');
+            const avatarEl = document.getElementById('top-avatar');
+            const userEl = document.getElementById('top-username');
+
+            if (countEl) countEl.innerText = acc.candies || 0;
+            if (avatarEl) avatarEl.innerText = acc.avatar || '🎃';
+            if (userEl) userEl.innerText = acc.username || 'Guest';
+
+            notifySettingsChangeToTabs();
+        }
+
+        /* ==========================================================================
+           11. DEFAULT SETTINGS & STATE
+           ========================================================================== */
+        const DEFAULT_SETTINGS = {
+            wispServer: 'wss://wisp.mercurywork.shop/',
+            wispMode: 'reroll',
+            disableWebRTC: true,
+            glintEnabled: true,
+            glintColor: 'cyan',
+            glintSpeed: 'slow', // 'slowest'|'slow'|'normal'|'fast'
+            glintIntensity: 85,
+            clockFormat: '12',
+            showSeconds: true,
+            showDate: true,
+            searchEngine: 'duckduckgo',
+            theme: 'spooky',
+            bookmarks: [
+                { name: '🎃 Trick-or-Treat Snake', url: 'vtech://snake' },
+                { name: '🍬 Candy Shop', url: 'vtech://shop' },
+                { name: '👤 User Account', url: 'vtech://account' },
+                { name: '⚙️ Settings', url: 'vtech://settings' },
+                { name: 'DuckDuckGo', url: 'https://duckduckgo.com' },
+                { name: 'Wikipedia', url: 'https://wikipedia.org' }
+            ]
+        };
+
+        let appSettings = loadSettings();
+
+        function loadSettings() {
+            try {
+                const stored = localStorage.getItem('vtech_browser_settings');
+                return stored ? { ...DEFAULT_SETTINGS, ...JSON.parse(stored) } : { ...DEFAULT_SETTINGS };
+            } catch (e) {
+                return { ...DEFAULT_SETTINGS };
+            }
+        }
+
+        function saveSettings() {
+            try {
+                localStorage.setItem('vtech_browser_settings', JSON.stringify(appSettings));
+            } catch (e) {}
+            applySettingsUI();
+            notifySettingsChangeToTabs();
+        }
+
+        /* ==========================================================================
+           11. DOM REFERENCES & CORE STATE
+           ========================================================================== */
         const uiTabBarContainer = document.getElementById('tab-bar-container');
         const uiAddTabBtn = document.getElementById('btn-add-tab');
         const uiViewsContainer = document.getElementById('views-container');
@@ -789,22 +1397,23 @@
         const uiForwardBtn = document.getElementById('btn-forward');
         const uiReloadBtn = document.getElementById('btn-reload');
         
-        // Wisp & Security Controls
         const uiWispToggleBtn = document.getElementById('btn-wisp-toggle');
         const uiWispPopup = document.getElementById('wisp-popup');
         const uiWispInput = document.getElementById('input-wisp');
         const uiSaveWispBtn = document.getElementById('btn-save-wisp');
         const uiWispStatusDot = document.getElementById('wisp-status-dot');
         const uiWebRtcToggle = document.getElementById('toggle-webrtc');
+        const uiSelectWispMode = document.getElementById('select-wisp-mode');
+        const uiQuickGlintColor = document.getElementById('select-quick-glint-color');
+        const uiQuickGlintToggle = document.getElementById('toggle-glint-quick');
+        const uiSpookyToggleBtn = document.getElementById('btn-toggle-spooky');
 
-        // Console Log Drawer Elements
+        const uiTopClockText = document.getElementById('top-clock-text');
         const uiLogDrawer = document.getElementById('log-drawer');
         const uiLogContent = document.getElementById('log-content');
         const uiLogToggleBtn = document.getElementById('btn-toggle-logs');
         const uiClearLogsBtn = document.getElementById('btn-clear-logs');
 
-        // Primary Wisp Endpoint and Silent Fallback Server List
-        const PRIMARY_WISP_SERVER = 'wss://wisp.mercurywork.shop/';
         const FALLBACK_WISP_SERVERS = [
             'wss://wisp.mercurywork.shop/',
             'wss://wisp.webmc.fun/',
@@ -813,17 +1422,16 @@
             'wss://wisp.rhw.one/'
         ];
 
-        // Dynamic Wisp server priority list (moves fast/working nodes to front)
-        let wispServerPool = [...new Set([PRIMARY_WISP_SERVER, ...FALLBACK_WISP_SERVERS])];
-
-        // State variables
+        let wispServerPool = [...new Set([appSettings.wispServer, ...FALLBACK_WISP_SERVERS])];
         let tabs = [];
         let activeTabId = null;
         let tabCounter = 0;
         let engineReady = false;
-        let activeWispServer = PRIMARY_WISP_SERVER;
-        let disableWebRTC = true; // Default WebRTC to disabled for privacy
+        let activeLogFilter = 'all';
+        let logoClickCount = 0;
+        let logoClickTimer = null;
 
+        /* Console Logging */
         const origConsoleLog = console.log;
         const origConsoleWarn = console.warn;
         const origConsoleError = console.error;
@@ -832,30 +1440,315 @@
             const time = new Date().toLocaleTimeString('en-US', { hour12: false });
             const entry = document.createElement('div');
             entry.className = `log-entry ${level}`;
+            entry.setAttribute('data-level', level);
             entry.innerText = `[${time}] ${message}`;
 
+            if (activeLogFilter !== 'all' && activeLogFilter !== level) entry.style.display = 'none';
             uiLogContent.appendChild(entry);
             uiLogContent.scrollTop = uiLogContent.scrollHeight;
         }
 
-        console.log = function(...args) {
-            origConsoleLog.apply(console, args);
-            appendLogEntry(args.join(' '), 'info');
-        };
-        console.warn = function(...args) {
-            origConsoleWarn.apply(console, args);
-            appendLogEntry(args.join(' '), 'warn');
-        };
-        console.error = function(...args) {
-            origConsoleError.apply(console, args);
-            appendLogEntry(args.join(' '), 'error');
+        console.log = function(...args) { origConsoleLog.apply(console, args); appendLogEntry(args.join(' '), 'info'); };
+        console.warn = function(...args) { origConsoleWarn.apply(console, args); appendLogEntry(args.join(' '), 'warn'); };
+        console.error = function(...args) { origConsoleError.apply(console, args); appendLogEntry(args.join(' '), 'error'); };
+
+        function filterLogs(level, btn) {
+            activeLogFilter = level;
+            document.querySelectorAll('.log-filter-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            uiLogContent.querySelectorAll('.log-entry').forEach(e => {
+                if (level === 'all' || e.getAttribute('data-level') === level) e.style.display = 'block';
+                else e.style.display = 'none';
+            });
+        }
+
+        /* ==========================================================================
+           12. EASTER EGGS & SECRET LISTENERS
+           ========================================================================== */
+        // 1. Konami Code Listener (↑ ↑ ↓ ↓ ← → ← → B A)
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === konamiSequence[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiSequence.length) {
+                    konamiIndex = 0;
+                    triggerKonamiEasterEgg();
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function triggerKonamiEasterEgg() {
+            appSettings.theme = 'vtech-overdrive';
+            saveSettings();
+            addCandies(100, "🎁 KONAMI UNLOCK REWARD!");
+            alert("⚡ KONAMI CODE ACTIVATED!\nUnlocked VTech Overdrive Theme & +100 Bonus Candies!");
+        }
+
+        // 2. Logo 5-Click Secret
+        document.getElementById('nav-vtech-logo').addEventListener('click', () => {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            if (logoClickCount >= 5) {
+                logoClickCount = 0;
+                addCandies(50, "🎃 GHOST HUNTER SECRET!");
+                alert("👻 GHOST HUNTER BADGE UNLOCKED!\nYou discovered the 5-Click Logo Easter Egg (+50 🍬)");
+            } else {
+                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+            }
+        });
+
+        // 3. Search Bar Easter Eggs ("do a barrel roll", "spooky", "vtech")
+        function checkSearchEasterEggs(query) {
+            const clean = query.trim().toLowerCase();
+            if (clean === 'do a barrel roll') {
+                document.body.classList.add('barrel-roll');
+                setTimeout(() => document.body.classList.remove('barrel-roll'), 1800);
+                showCandyToast("🌀 BARREL ROLL!");
+                return true;
+            }
+            if (clean === 'spooky' || clean === 'halloween' || clean === 'bats') {
+                triggerBatSwarm();
+                showCandyToast("🦇 BAT SWARM!");
+                return true;
+            }
+            if (clean === 'v8' || clean === 'v8 engine' || clean === 'vtech' || clean === 'vtech browser') {
+                addCandies(30, "🏎️ V8 POWER REWARD!");
+                triggerCandyShower();
+                return true;
+            }
+            return false;
+        }
+
+        function triggerBatSwarm() {
+            for (let i = 0; i < 15; i++) {
+                const bat = document.createElement('div');
+                bat.innerText = '🦇';
+                bat.style.position = 'fixed';
+                bat.style.left = Math.random() * 100 + 'vw';
+                bat.style.top = '100vh';
+                bat.style.fontSize = (Math.random() * 24 + 20) + 'px';
+                bat.style.zIndex = '99999';
+                bat.style.transition = 'all 2.5s ease-out';
+                document.body.appendChild(bat);
+
+                setTimeout(() => {
+                    bat.style.transform = `translate(${(Math.random() - 0.5) * 400}px, -120vh) rotate(${Math.random() * 360}deg)`;
+                }, 50);
+
+                setTimeout(() => bat.remove(), 2600);
+            }
+        }
+
+        function triggerCandyShower() {
+            for (let i = 0; i < 20; i++) {
+                const candy = document.createElement('div');
+                candy.innerText = ['🍬', '🍭', '🍫', '🎃'][Math.floor(Math.random() * 4)];
+                candy.style.position = 'fixed';
+                candy.style.left = Math.random() * 100 + 'vw';
+                candy.style.top = '-50px';
+                candy.style.fontSize = '28px';
+                candy.style.zIndex = '99999';
+                candy.style.transition = 'all 2.2s linear';
+                document.body.appendChild(candy);
+
+                setTimeout(() => {
+                    candy.style.top = '105vh';
+                    candy.style.transform = `rotate(${Math.random() * 720}deg)`;
+                }, 50);
+
+                setTimeout(() => candy.remove(), 2300);
+            }
+        }
+
+        // 4. Developer Console Easter Egg Object
+        window.vtech = {
+            giveCandies: function(amount = 100) {
+                addCandies(amount, "Dev Console Reward");
+                return `🍬 Granted ${amount} candies! Happy Halloween!`;
+            },
+            unlockAll: function() {
+                const acc = getActiveAccount();
+                acc.unlockedAvatars = ['🎃', '👻', '🦇', '🧙‍♂️', '💀', '👾', '👑'];
+                acc.unlockedGlints = ['ghost', 'pumpkin', 'poison', 'cyan', 'blue', 'purple', 'gold'];
+                saveAccounts();
+                return "🔓 Unlocked all avatars and Glint FX colors!";
+            },
+            spookyMode: function() {
+                appSettings.theme = appSettings.theme === 'spooky' ? 'midnight' : 'spooky';
+                saveSettings();
+                return `🎃 Spooky Mode set to: ${appSettings.theme}`;
+            },
+            snake: function() {
+                openSnakeTab();
+                return "🐍 Launching Trick-or-Treat Snake!";
+            }
         };
 
+        /* ==========================================================================
+           13. BAT & SPOOKY PARTICLES ENGINE
+           ========================================================================== */
+        const particleCanvas = document.getElementById('spooky-particle-canvas');
+        const pCtx = particleCanvas.getContext('2d');
+        let particles = [];
+
+        function resizeParticleCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeParticleCanvas);
+        resizeParticleCanvas();
+
+        class BatParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() < 0.5 ? -40 : particleCanvas.width + 40;
+                this.y = Math.random() * (particleCanvas.height * 0.7);
+                this.size = Math.random() * 16 + 14;
+                this.vx = (this.x < 0 ? 1 : -1) * (Math.random() * 2 + 1);
+                this.vy = (Math.random() - 0.5) * 1.2;
+                this.symbol = '🦇';
+                this.opacity = Math.random() * 0.6 + 0.3;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < -60 || this.x > particleCanvas.width + 60) this.reset();
+            }
+            draw() {
+                pCtx.globalAlpha = this.opacity;
+                pCtx.font = `${this.size}px sans-serif`;
+                pCtx.fillText(this.symbol, this.x, this.y);
+            }
+        }
+
+        for (let i = 0; i < 20; i++) particles.push(new BatParticle());
+
+        function animateSpookyParticles() {
+            if (appSettings.theme === 'spooky') {
+                particleCanvas.style.display = 'block';
+                pCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+                particles.forEach(p => { p.update(); p.draw(); });
+            } else {
+                particleCanvas.style.display = 'none';
+            }
+            requestAnimationFrame(animateSpookyParticles);
+        }
+        animateSpookyParticles();
+
+        /* ==========================================================================
+           14. LIVE CLOCK ENGINE
+           ========================================================================== */
+        function updateClockDisplay() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            let ampm = '';
+
+            if (appSettings.clockFormat === '12') {
+                ampm = hours >= 12 ? ' PM' : ' AM';
+                hours = hours % 12 || 12;
+            } else {
+                hours = String(hours).padStart(2, '0');
+            }
+
+            let timeStr = `${hours}:${minutes}`;
+            if (appSettings.showSeconds) timeStr += `:${seconds}`;
+            timeStr += ampm;
+
+            if (appSettings.showDate) {
+                timeStr += ` • ${now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}`;
+            }
+
+            if (uiTopClockText) uiTopClockText.innerText = timeStr;
+
+            document.querySelectorAll('.home-clock-large').forEach(clockEl => {
+                let homeTime = `${hours}:${minutes}`;
+                if (appSettings.showSeconds) homeTime += `:${seconds}`;
+                homeTime += ampm;
+                clockEl.innerText = homeTime;
+            });
+        }
+        setInterval(updateClockDisplay, 1000);
+
+        /* ==========================================================================
+           15. THEMES & GLINT APPLY ENGINE
+           ========================================================================== */
+        function applySettingsUI() {
+            document.documentElement.setAttribute('data-theme', appSettings.theme);
+
+            const glintColors = {
+                ghost: 'rgba(157, 78, 221, 0.85)',
+                pumpkin: 'rgba(255, 119, 0, 0.85)',
+                poison: 'rgba(16, 185, 129, 0.85)',
+                cyan: 'rgba(0, 240, 255, 0.75)',
+                blue: 'rgba(138, 180, 248, 0.75)',
+                purple: 'rgba(168, 85, 247, 0.75)',
+                gold: 'rgba(245, 158, 11, 0.75)'
+            };
+
+            const glintSpeeds = {
+                slowest: '14s',
+                slow: '10s',
+                normal: '5s',
+                fast: '2.5s'
+            };
+
+            document.documentElement.style.setProperty('--glint-color', glintColors[appSettings.glintColor] || glintColors.cyan);
+            document.documentElement.style.setProperty('--glint-speed', glintSpeeds[appSettings.glintSpeed] || glintSpeeds.slow);
+            document.documentElement.style.setProperty('--glint-opacity', (appSettings.glintIntensity / 100).toString());
+            document.documentElement.style.setProperty('--glint-display', appSettings.glintEnabled ? 'block' : 'none');
+
+            if (uiWispInput) uiWispInput.value = appSettings.wispServer;
+            if (uiWebRtcToggle) uiWebRtcToggle.checked = appSettings.disableWebRTC;
+            if (uiSelectWispMode) uiSelectWispMode.value = appSettings.wispMode;
+            if (uiQuickGlintColor) uiQuickGlintColor.value = appSettings.glintColor;
+            if (uiQuickGlintToggle) uiQuickGlintToggle.checked = appSettings.glintEnabled;
+
+            const speedSelect = document.getElementById('select-quick-glint-speed');
+            if (speedSelect) speedSelect.value = appSettings.glintSpeed || 'slow';
+
+            updateTopAccountBadge();
+            updateClockDisplay();
+        }
+
+        function updateGlintSpeed(val) {
+            appSettings.glintSpeed = val;
+            saveSettings();
+        }
+
+        function notifySettingsChangeToTabs() {
+            tabs.forEach(t => {
+                if (t.iframeEl && t.iframeEl.contentWindow) {
+                    t.iframeEl.contentWindow.postMessage({
+                        type: 'VTECH_SYNC_STATE',
+                        settings: appSettings,
+                        account: getActiveAccount()
+                    }, '*');
+                }
+            });
+        }
+
+        /* ==========================================================================
+           16. WASM & WISP PROXY ENGINE
+           ========================================================================== */
         async function initEngine() {
+            // Render initial tab immediately so browser UI is visible on startup
+            if (tabs.length === 0) {
+                createNewTab();
+            }
+
             try {
-                updateStatus("Loading Rook WASM core...", "warning");
-                
-                // Wait for libcurl script and WASM initialization
+                updateStatus("Initializing VTech WASM Core...", "warning");
+
                 if (typeof libcurl === 'undefined') {
                     await new Promise(resolve => {
                         const onLoad = () => resolve();
@@ -872,104 +1765,75 @@
                     });
                 }
 
-                // Wait for bundled WASM module readiness (avoid calling load_wasm as libcurl_full.js embeds it)
                 if (typeof libcurl !== 'undefined' && libcurl.ready) {
                     await libcurl.ready;
                 }
 
                 engineReady = true;
-                setWispEndpoint(PRIMARY_WISP_SERVER);
-                updateStatus("Rook Browser Ready", "online");
-
-                console.log("[Rook Security] Initialized with WebRTC Disabled (IP Leak Protected)");
-
-                // Initialize initial tab
-                createNewTab();
-
+                setWispEndpoint(appSettings.wispServer);
+                updateStatus("VTech Engine Ready", "online");
             } catch (err) {
-                console.error("[Rook Engine Init Error]", err);
-                updateStatus("Initialization Error: " + err.message, "offline");
+                console.error("[VTech Init Error]", err);
+                updateStatus("Initialization Warning: " + err.message, "offline");
             }
         }
 
         function setWispEndpoint(wsUrl) {
             if (!wsUrl.endsWith('/')) wsUrl += '/';
-            activeWispServer = wsUrl;
-            
-            // Reorder pool to place active server at top
+            appSettings.wispServer = wsUrl;
             wispServerPool = [wsUrl, ...wispServerPool.filter(s => s !== wsUrl)];
 
             if (typeof libcurl !== 'undefined' && typeof libcurl.set_websocket === 'function') {
-                try {
-                    libcurl.set_websocket(wsUrl);
-                } catch (e) {
-                    console.warn(`[Rook Proxy Engine] Error setting Wisp socket: ${e.message}`);
-                }
+                try { libcurl.set_websocket(wsUrl); } catch (e) {}
             }
-            console.log(`[Rook Proxy Engine] Active Wisp Node set to: ${wsUrl}`);
+            console.log(`[VTech Proxy] Active Node: ${wsUrl}`);
         }
 
         async function executeLibcurlFetch(url, options = {}) {
-            const serversToTry = [...wispServerPool];
-
             const defaultHeaders = {
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.9',
-                'Accept-Encoding': 'identity'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0 Safari/537.36'
             };
 
             const mergedHeaders = { ...defaultHeaders, ...(options.headers || {}) };
 
-            let lastErr = null;
-            for (const server of serversToTry) {
-                // Try up to 2 connection attempts per server for transient socket drops
-                for (let attempt = 1; attempt <= 2; attempt++) {
-                    try {
-                        if (typeof libcurl !== 'undefined' && typeof libcurl.set_websocket === 'function') {
-                            libcurl.set_websocket(server);
-                        }
-                        
-                        const fetchOptions = {
-                            redirect: 'follow',
-                            ...options,
-                            headers: mergedHeaders
-                        };
-                        delete fetchOptions._libcurl_http_version;
+            if (appSettings.wispMode === 'reroll') {
+                let lastErr = null;
+                for (const server of wispServerPool) {
+                    for (let attempt = 1; attempt <= 2; attempt++) {
+                        try {
+                            if (typeof libcurl !== 'undefined' && typeof libcurl.set_websocket === 'function') {
+                                libcurl.set_websocket(server);
+                            }
+                            const fetchOptions = { redirect: 'follow', ...options, headers: mergedHeaders };
+                            delete fetchOptions._libcurl_http_version;
 
-                        const response = await libcurl.fetch(url, fetchOptions);
-                        
-                        if (server !== activeWispServer) {
-                            setWispEndpoint(server);
-                            if (uiWispInput) uiWispInput.value = server;
-                            console.log(`[Rook Network] Silent failover successful! Connected via ${server}`);
-                        }
-                        return response;
-                    } catch (err) {
-                        lastErr = err;
-                        console.warn(`[Rook Network] Attempt ${attempt} failed on Wisp node (${server}): ${err.message || err}`);
-                        if (attempt < 2) {
-                            // Brief 150ms backoff before immediate retry on same node
-                            await new Promise(r => setTimeout(r, 150));
+                            const response = await libcurl.fetch(url, fetchOptions);
+                            if (server !== appSettings.wispServer) {
+                                setWispEndpoint(server);
+                                saveSettings();
+                            }
+                            return response;
+                        } catch (err) {
+                            lastErr = err;
+                            if (attempt < 2) await new Promise(r => setTimeout(r, 150));
                         }
                     }
                 }
+                throw lastErr || new Error("All Wisp proxy endpoints failed to respond.");
+            } else {
+                if (typeof libcurl !== 'undefined' && typeof libcurl.set_websocket === 'function') {
+                    libcurl.set_websocket(appSettings.wispServer);
+                }
+                const fetchOptions = { redirect: 'follow', ...options, headers: mergedHeaders };
+                delete fetchOptions._libcurl_http_version;
+                return await libcurl.fetch(url, fetchOptions);
             }
-            throw lastErr || new Error("All Wisp proxy endpoints failed to complete the request.");
-        }
-        
-        
-
-        
-        
-        function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
-            return Promise.race([
-                executeLibcurlFetch(url, options),
-                new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error(`Wisp stream fetch timed out after ${timeoutMs}ms`)), timeoutMs)
-                )
-            ]);
         }
 
+        /* ==========================================================================
+           17. TAB MANAGEMENT SYSTEM
+           ========================================================================== */
         function createNewTab(initialUrl = '') {
             tabCounter++;
             const id = 'tab_' + tabCounter;
@@ -989,10 +1853,10 @@
             };
 
             const tabEl = document.createElement('div');
-            tabEl.className = 'tab';
+            tabEl.className = 'tab glint-fx';
             tabEl.innerHTML = `
                 <svg class="tab-icon" viewBox="0 0 24 24">
-                    <path d="M19 22H5v-2h14v2zm-1-3H6v-2h12v2zm1-11v2h-2V8h-2v2h-2V8h-2v2H9V8H7v2H5V8l2-3h10l2 3zM7 15h10v-3H7v3z"/>
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
                 <span class="tab-title">New Tab</span>
                 <span class="tab-close" title="Close Tab">&times;</span>
@@ -1012,40 +1876,7 @@
 
             const viewEl = document.createElement('div');
             viewEl.className = 'tab-view';
-            viewEl.innerHTML = `
-                <div class="home-container">
-                    <div class="home-logo-wrapper">
-                        <svg class="home-rook-icon" viewBox="0 0 24 24">
-                            <path d="M19 22H5v-2h14v2zm-1-3H6v-2h12v2zm1-11v2h-2V8h-2v2h-2V8h-2v2H9V8H7v2H5V8l2-3h10l2 3zM7 15h10v-3H7v3z"/>
-                        </svg>
-                        <h1 class="home-title">Rook Browser</h1>
-                    </div>
-                    <div class="home-search-box">
-                        <svg class="home-search-icon" viewBox="0 0 24 24">
-                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-                        </svg>
-                        <input type="text" class="home-input" placeholder="Search with Rook or type a URL" />
-                    </div>
-                    <div class="home-shortcuts">
-                        
-                        <a class="shortcut-pill" data-url="rook://updates">Updates</a>
-                        <a class="shortcut-pill" data-url="rook://settings">Settings</a>
-                        <a class="shortcut-pill" data-url="https://chess.com">Chess</a>
-                        <a class="shortcut-pill" data-url="https://duckduckgo.com">DuckDuckGo</a>
-                        <a class="shortcut-pill" data-url="https://wikipedia.org">Wikipedia</a>
-                        <a class="shortcut-pill" data-url="https://github.com">GitHub</a>
-                        <a class="shortcut-pill" data-url="https://reddit.com">Reddit</a>
-                    </div>
-                </div>
-
-                <div class="iframe-container">
-                    <div class="loader-overlay">
-                        <div class="spinner"></div>
-                        <div class="loader-text">Loading page via Rook Wisp...</div>
-                    </div>
-                    <iframe class="browser-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
-                </div>
-            `;
+            viewEl.innerHTML = renderHomeViewHTML();
 
             uiViewsContainer.appendChild(viewEl);
 
@@ -1054,25 +1885,76 @@
             tabObj.loaderOverlay = viewEl.querySelector('.loader-overlay');
             tabObj.loaderText = viewEl.querySelector('.loader-text');
 
+            bindHomeViewEvents(viewEl, tabObj);
+
+            tabs.push(tabObj);
+            switchTab(id);
+
+            if (initialUrl) navigateActiveTab(initialUrl);
+        }
+
+        function renderHomeViewHTML() {
+            const bookmarksHTML = appSettings.bookmarks.map(b => 
+                `<a class="shortcut-pill glint-fx" data-url="${b.url}">${b.name}</a>`
+            ).join('');
+
+            return `
+                <div class="home-container">
+                    <div class="home-greeting">V8 POWERED PERFORMANCE</div>
+                    <div class="home-clock-large">12:00 PM</div>
+
+                    <div class="home-v8-wrapper" onclick="triggerCandyShower()">
+                        <svg class="home-v8-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Engine Block Structure -->
+                            <path d="M20 35 L50 20 L80 35 L85 75 L50 85 L15 75 Z" fill="rgba(0, 240, 255, 0.08)" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linejoin="round"/>
+                            <!-- Left Header Pipes -->
+                            <path d="M22 40 L8 48 M25 48 L11 56 M28 56 L14 64 M31 64 L17 72" stroke="var(--accent-blue)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Right Header Pipes -->
+                            <path d="M78 40 L92 48 M75 48 L89 56 M72 56 L86 64 M69 64 L83 72" stroke="var(--accent-blue)" stroke-width="3" stroke-linecap="round"/>
+                            <!-- Intake Plenum -->
+                            <rect x="34" y="24" width="32" height="13" rx="4" fill="var(--tab-bg)" stroke="var(--accent-blue)" stroke-width="2"/>
+                            <!-- V8 Central Emblem -->
+                            <text x="50" y="56" font-family="-apple-system, sans-serif" font-weight="900" font-size="22" fill="var(--accent-blue)" text-anchor="middle">V8</text>
+                            <text x="50" y="69" font-family="-apple-system, sans-serif" font-weight="800" font-size="7" fill="var(--text-subtle)" text-anchor="middle" letter-spacing="1.5">TWIN TURBO</text>
+                        </svg>
+                        <span class="v8-badge-text">V8 POWERED</span>
+                    </div>
+
+                    <div class="home-search-box">
+                        <svg class="home-search-icon" viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                        </svg>
+                        <input type="text" class="home-input" placeholder="Search with V8 engine or type URL..." />
+                    </div>
+
+                    <div class="home-shortcuts">
+                        ${bookmarksHTML}
+                    </div>
+                </div>
+
+                <div class="iframe-container">
+                    <div class="loader-overlay">
+                        <div class="spinner"></div>
+                        <div class="loader-text">Loading page via V8 Engine...</div>
+                    </div>
+                    <iframe class="browser-iframe" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+                </div>
+            `;
+        }
+
+        function bindHomeViewEvents(viewEl, tabObj) {
             const homeInput = viewEl.querySelector('.home-input');
-            homeInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    navigateActiveTab(homeInput.value);
-                }
-            });
+            if (homeInput) {
+                homeInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') navigateActiveTab(homeInput.value);
+                });
+            }
 
             viewEl.querySelectorAll('.shortcut-pill').forEach(pill => {
                 pill.addEventListener('click', () => {
                     navigateActiveTab(pill.dataset.url);
                 });
             });
-
-            tabs.push(tabObj);
-            switchTab(id);
-
-            if (initialUrl) {
-                navigateActiveTab(initialUrl);
-            }
         }
 
         function switchTab(id) {
@@ -1091,11 +1973,8 @@
                 }
             });
 
-            if (targetTab.isHome) {
-                uiUrlInput.value = '';
-            } else {
-                uiUrlInput.value = targetTab.url;
-            }
+            if (targetTab.isHome) uiUrlInput.value = '';
+            else uiUrlInput.value = targetTab.url;
 
             uiBackBtn.disabled = targetTab.historyIndex <= 0;
             uiForwardBtn.disabled = targetTab.historyIndex >= targetTab.history.length - 1;
@@ -1111,34 +1990,34 @@
 
             tabs.splice(index, 1);
 
-            if (tabs.length === 0) {
-                createNewTab();
-            } else if (activeTabId === id) {
+            if (tabs.length === 0) createNewTab();
+            else if (activeTabId === id) {
                 const nextIndex = Math.max(0, index - 1);
                 switchTab(tabs[nextIndex].id);
             }
         }
 
-        function getActiveTab() {
-            return tabs.find(t => t.id === activeTabId);
-        }
+        function getActiveTab() { return tabs.find(t => t.id === activeTabId); }
 
+        function openSnakeTab() { createNewTab('vtech://snake'); }
+        function openShopTab() { createNewTab('vtech://shop'); }
+        function openAccountTab() { createNewTab('vtech://account'); }
+        function openSettingsTab() { createNewTab('vtech://settings'); }
+
+        /* ==========================================================================
+           18. NAVIGATION ENGINE
+           ========================================================================== */
         function formatTargetUrl(rawInput) {
             let trimmed = rawInput.trim();
-            if (!trimmed) return 'https://www.google.com';
+            if (!trimmed) return 'https://duckduckgo.com';
 
-            // Support internal rook:// URLs
-            if (/^rook:\/\//i.test(trimmed)) {
-                return trimmed.toLowerCase();
+            if (checkSearchEasterEggs(trimmed)) {
+                return 'vtech://home';
             }
 
-            if (/^https?:\/\//i.test(trimmed)) {
-                return trimmed;
-            }
-
-            if (/^([a-z0-9|-]+\.)+[a-z]{2,}(:\d+)?(\/.*)?$/i.test(trimmed)) {
-                return 'https://' + trimmed;
-            }
+            if (/^vtech:\/\//i.test(trimmed)) return trimmed.toLowerCase();
+            if (/^https?:\/\//i.test(trimmed)) return trimmed;
+            if (/^([a-z0-9|-]+\.)+[a-z]{2,}(:\d+)?(\/.*)?$/i.test(trimmed)) return 'https://' + trimmed;
 
             return 'https://html.duckduckgo.com/html/?q=' + encodeURIComponent(trimmed);
         }
@@ -1147,7 +2026,24 @@
             const activeTab = getActiveTab();
             if (!activeTab) return;
 
+            const acc = getActiveAccount();
+            if (acc && acc.isBanned) {
+                showTabLoader(activeTab, false);
+                renderIframeContent(activeTab, `
+                    <body style="background:#090a0f; color:#f28b82; padding:60px 40px; font-family:sans-serif; text-align:center;">
+                        <h2 style="font-size:28px; margin-bottom:12px;">🚫 ACCOUNT BANNED</h2>
+                        <p style="color:#8a94a6; font-size:15px; max-width:500px; margin:0 auto 20px auto;">
+                            Your account (<b>${acc.username}</b>) has been suspended by an administrator.
+                        </p>
+                        <p style="font-size:13px; color:#ff7700;">Contact developer <code>vtechluver</code> to appeal or switch accounts in <code>vtech://account</code>.</p>
+                    </body>
+                `);
+                return;
+            }
+
             const formattedUrl = formatTargetUrl(targetUrl);
+            if (formattedUrl === 'vtech://home') return;
+
             activeTab.url = formattedUrl;
             activeTab.isHome = false;
             uiUrlInput.value = formattedUrl;
@@ -1157,459 +2053,440 @@
             homeView.style.display = 'none';
             iframeContainer.classList.add('active');
 
-            // Handle Internal rook:// Pages Directly without Wisp proxy
-            if (formattedUrl.startsWith('rook://')) {
+            if (formattedUrl.startsWith('vtech://')) {
                 showTabLoader(activeTab, false);
                 renderInternalPage(activeTab, formattedUrl);
                 recordTabHistory(activeTab, formattedUrl);
                 return;
             }
 
-            if (!engineReady) return;
-
-            showTabLoader(activeTab, true, `Fetching ${formattedUrl}...`);
+            showTabLoader(activeTab, true, `Connecting to ${formattedUrl}...`);
             updateStatus(`Fetching ${formattedUrl}...`, "warning");
 
             try {
-                const response = await executeLibcurlFetch(formattedUrl, {
-                    method: 'GET',
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0 Safari/537.36',
-                        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                        'Accept-Encoding': 'identity'
-                    }
-                });
-
+                const response = await executeLibcurlFetch(formattedUrl, { method: 'GET' });
                 const htmlText = await response.text();
 
-                showTabLoader(activeTab, true, `Processing styles and security filters...`);
                 const preparedHtml = await prepareDocumentForIframe(htmlText, formattedUrl, activeTab.id);
 
                 const titleMatch = htmlText.match(/<title[^>]*>([^<]+)<\/title>/i);
-                if (titleMatch && titleMatch[1]) {
-                    activeTab.title = titleMatch[1].trim();
-                } else {
-                    try {
-                        activeTab.title = new URL(formattedUrl).hostname;
-                    } catch(e) {
-                        activeTab.title = formattedUrl;
-                    }
-                }
+                activeTab.title = titleMatch && titleMatch[1] ? titleMatch[1].trim() : formattedUrl;
                 activeTab.tabEl.querySelector('.tab-title').innerText = activeTab.title;
-                activeTab.tabEl.querySelector('.tab-title').title = activeTab.title;
 
                 renderIframeContent(activeTab, preparedHtml);
-
                 recordTabHistory(activeTab, formattedUrl);
-                updateStatus(`Loaded: ${formattedUrl}`, "online");
+
+                // Earn Browsing Candies!
+                addCandies(5, "Page Visit Candy Reward!");
 
             } catch (err) {
-                console.warn(`[Navigation Error]`, err);
                 renderErrorView(activeTab, formattedUrl, err);
-                updateStatus(`Navigation Failed`, "offline");
             } finally {
                 showTabLoader(activeTab, false);
             }
         }
 
+        /* ==========================================================================
+           19. INTERNAL PROTOCOLS (vtech://)
+           ========================================================================== */
         function renderInternalPage(tabObj, internalUrl) {
-            const cleanPath = internalUrl.replace('rook://', '').replace(/\/$/, '');
-            let title = 'Rook Browser';
-            let contentHtml = '';
+            const cleanPath = internalUrl.replace('vtech://', '').replace(/\/$/, '');
+            let title = "VTech Browser";
+            let contentHtml = "";
 
-            if (cleanPath === 'updates') {
-                title = 'Rook Updates & Patch Notes';
-                const savedNotes = localStorage.getItem('rook_updates_notes') || '';
-                contentHtml = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            :root {
-                                --bg: #202124; --card-bg: #292a2d; --text: #e8eaed;
-                                --subtext: #9aa0a6; --accent: #8ab4f8; --border: #4a4d51;
-                                --green: #81c995;
-                            }
-                            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 32px 24px; margin: 0; }
-                            .container { max-width: 800px; margin: 0 auto; }
-                            .header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; }
-                            .title-group h1 { font-size: 24px; margin: 0 0 6px 0; color: var(--text); font-weight: 600; }
-                            .badge { background: rgba(138, 180, 248, 0.15); color: var(--accent); padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; border: 1px solid var(--accent); }
-                            .section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-                            .section h3 { margin-top: 0; font-size: 16px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
-                            ul { padding-left: 20px; margin: 10px 0; color: var(--subtext); font-size: 14px; line-height: 1.6; }
-                            textarea { width: 100%; height: 180px; background: #18191c; border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 12px; font-family: 'Consolas', monospace; font-size: 13px; resize: vertical; box-sizing: border-box; outline: none; }
-                            textarea:focus { border-color: var(--accent); }
-                            .btn-row { display: flex; gap: 10px; margin-top: 12px; justify-content: flex-end; }
-                            button { background: var(--accent); color: #121212; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; transition: opacity 0.15s; }
-                            button:hover { opacity: 0.9; }
-                            button.secondary { background: transparent; color: var(--subtext); border: 1px solid var(--border); }
-                            button.secondary:hover { color: var(--text); border-color: var(--text); }
-                            .status-msg { font-size: 12px; color: var(--green); display: none; align-items: center; margin-right: auto; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">
-                                <div class="title-group">
-                                    <h1> Rook Updates & System Logs</h1>
-                                    <span style="color: var(--subtext); font-size: 13px;">Internal Browser Information & Patch Notes</span>
-                                </div>
-                                <span class="badge">v2.4 Ready</span>
-                            </div>
-
-                            <div class="section">
-                                <h3> Custom Developer Notes & Workspace</h3>
-                                <p style="font-size: 13px; color: var(--subtext); margin-bottom: 12px;">Type custom patch notes, update logs, or code snippets below. Notes are automatically retained in browser local storage.</p>
-                                <textarea id="notes-input" placeholder="Type notes here (usefull if you dont have your INB you little pion brain)">${savedNotes}</textarea>
-                                <div class="btn-row">
-                                    <span id="save-status" class="status-msg">✓ Saved to Local Storage</span>
-                                    <button class="secondary" onclick="clearNotes()">Clear</button>
-                                    <button class="secondary" onclick="downloadNotes()">Export .txt</button>
-                                    <button onclick="saveNotes()">Save Notes</button>
-                                </div>
-                            </div>
-
-                            <div class="section">
-                                <h3>Recent Changes</h3>
-                                <ul>
-                                    <li><b>Internal Protocol Routing:</b> Support for <code>rook://updates</code> and <code>rook://settings</code> tabs without triggering external Wisp proxy requests.</li>
-                                    <li><b>Wisp Failover & Pool Management:</b> Automatic multi-node fallback engine to recover from WebSocket disconnection without dropping requests.</li>
-                                    <li><b>No Service Worker Requirement:</b> Single-file HTML bundle design running direct in-memory libcurl WASM bindings.</li>
-                                    <li><b>IP Leak Protection:</b> WebRTC PeerConnection masking active by default.</li>
-                                    <li><b>Forks global chat has been added to the site. and many bugs!</li>
-                                    <li><b>EMAIL ME AT 735256@salemkeizer.org FOR REQUESTS OR SUGGESTIONS!!!!</li>  
-                                </ul>
-                            </div>
-                        </div>
-
-                        <script>
-                            function saveNotes() {
-                                const val = document.getElementById('notes-input').value;
-                                localStorage.setItem('rook_updates_notes', val);
-                                const msg = document.getElementById('save-status');
-                                msg.style.display = 'inline-flex';
-                                setTimeout(() => msg.style.display = 'none', 2500);
-                            }
-
-                            function clearNotes() {
-                                document.getElementById('notes-input').value = '';
-                                localStorage.removeItem('rook_updates_notes');
-                            }
-
-                            function downloadNotes() {
-                                const val = document.getElementById('notes-input').value;
-                                const blob = new Blob([val], { type: 'text/plain' });
-                                const a = document.createElement('a');
-                                a.href = URL.createObjectURL(blob);
-                                a.download = 'rook-updates-notes.txt';
-                                a.click();
-                            }
-                        <\/script>
-                    </body>
-                    </html>
-                `;
+            if (cleanPath === 'snake') {
+                title = "Trick-or-Treat Snake";
+                contentHtml = generateSnakeGameHTML();
+            } else if (cleanPath === 'shop') {
+                title = "Candy Shop Hub";
+                contentHtml = generateShopHTML();
+            } else if (cleanPath === 'account') {
+                title = "User Account & Loot";
+                contentHtml = generateAccountHTML();
             } else if (cleanPath === 'settings') {
-                title = 'Rook Browser Settings';
-                contentHtml = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <style>
-                            :root {
-                                --bg: #202124; --card-bg: #292a2d; --text: #e8eaed;
-                                --subtext: #9aa0a6; --accent: #8ab4f8; --border: #4a4d51;
-                            }
-                            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 32px 24px; margin: 0; }
-                            .container { max-width: 800px; margin: 0 auto; }
-                            .header { border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; }
-                            .header h1 { font-size: 24px; margin: 0; color: var(--text); }
-                            .section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-                            .section h3 { margin-top: 0; font-size: 16px; color: var(--accent); }
-                            .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-                            .setting-row:last-child { border-bottom: none; }
-                            .label-group { display: flex; flex-direction: column; gap: 4px; }
-                            .label-title { font-size: 14px; font-weight: 500; }
-                            .label-desc { font-size: 12px; color: var(--subtext); }
-                            input[type="text"] { background: #18191c; border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text); font-size: 13px; width: 280px; outline: none; }
-                            button { background: var(--accent); color: #121212; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; font-size: 12px; cursor: pointer; }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <div class="header">
-                                <h1>⚙️ Rook Settings & Configuration</h1>
-                            </div>
-
-                            <div class="section">
-                                <h3>Network & Wisp Proxy Settings</h3>
-                                <div class="setting-row">
-                                    <div class="label-group">
-                                        <span class="label-title">Active Wisp Endpoint</span>
-                                        <span class="label-desc">Primary WebSocket proxy connection point</span>
-                                    </div>
-                                    <input type="text" id="wisp-url" value="${activeWispServer}" />
-                                </div>
-                                <div class="setting-row">
-                                    <div class="label-group">
-                                        <span class="label-title">Apply Wisp Endpoint</span>
-                                        <span class="label-desc">Update network socket instantly</span>
-                                    </div>
-                                    <button onclick="updateWisp()">Save Proxy</button>
-                                </div>
-                            </div>
-
-                            <div class="section">
-                                <h3>Privacy & Protection</h3>
-                                <div class="setting-row">
-                                    <div class="label-group">
-                                        <span class="label-title">WebRTC IP Protection</span>
-                                        <span class="label-desc">${disableWebRTC ? 'Currently Enabled (Protected)' : 'Currently Disabled'}</span>
-                                    </div>
-                                    <span style="font-size: 13px; color: ${disableWebRTC ? '#81c995' : '#f28b82'}">${disableWebRTC ? '● Protected' : '○ Unprotected'}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <script>
-                            function updateWisp() {
-                                const newWisp = document.getElementById('wisp-url').value;
-                                window.parent.postMessage({ type: 'ROOK_SET_WISP', url: newWisp }, '*');
-                            }
-                        <\/script>
-                    </body>
-                    </html>
-                `;
+                title = "Settings Hub";
+                contentHtml = generateSettingsPageHTML();
             } else {
-                title = 'Rook Internal Protocol';
-                contentHtml = `
-                    <!DOCTYPE html>
-                    <html>
-                    <body style="background:#202124; color:#e8eaed; font-family:sans-serif; padding:40px;">
-                        <h2>Unknown Internal Page: <code>${internalUrl}</code></h2>
-                        <p>Available pages: <a href="#" onclick="window.parent.postMessage({type:'ROOK_INTERCEPT_NAVIGATE', tabId:'${tabObj.id}', url:'rook://updates'}, '*')" style="color:#8ab4f8">rook://updates</a> or <a href="#" onclick="window.parent.postMessage({type:'ROOK_INTERCEPT_NAVIGATE', tabId:'${tabObj.id}', url:'rook://settings'}, '*')" style="color:#8ab4f8">rook://settings</a></p>
-                    </body>
-                    </html>
-                `;
+                title = "VTech Page";
+                contentHtml = `<body style="background:#090a0f; color:#fff; padding:40px;"><h2>Internal Page: ${internalUrl}</h2></body>`;
             }
 
             tabObj.title = title;
             tabObj.tabEl.querySelector('.tab-title').innerText = title;
-            tabObj.tabEl.querySelector('.tab-title').title = title;
-
             renderIframeContent(tabObj, contentHtml);
         }
 
-        function resolveCssUrls(cssText, cssBaseUrl) {
-            if (!cssText) return '';
-            
-            // Rewrite @import "path" or @import url("path")
-            let processed = cssText.replace(/@import\s+(?:url\()?['"]?([^'"\);]+)['"]?\)?/gi, (match, importUrl) => {
-                const trimmed = importUrl.trim();
-                if (trimmed.startsWith('data:') || trimmed.startsWith('blob:') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-                    return match;
-                }
-                try {
-                    const absUrl = new URL(trimmed, cssBaseUrl).href;
-                    return `@import url("${absUrl}")`;
-                } catch (e) {
-                    return match;
-                }
-            });
+        /* TRICK-OR-TREAT SNAKE MINIGAME HTML */
+        function generateSnakeGameHTML() {
+            const acc = getActiveAccount();
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: sans-serif; background: #0b0712; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; user-select: none; }
+                        h1 { color: #ff7700; margin-bottom: 4px; display: flex; align-items: center; gap: 10px; }
+                        .score-bar { display: flex; gap: 20px; font-size: 16px; font-weight: bold; margin-bottom: 12px; color: #ffb703; }
+                        canvas { background: #180f26; border: 3px solid #ff7700; border-radius: 12px; box-shadow: 0 0 20px rgba(255,119,0,0.3); }
+                        .controls { margin-top: 14px; font-size: 13px; color: #c1a8d9; text-align: center; }
+                        button { background: #ff7700; color: #000; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>🎃 Trick-or-Treat Snake</h1>
+                    <div class="score-bar">
+                        <span>Score: <span id="score">0</span></span>
+                        <span>Candies Earned: 🍬 <span id="candies">0</span></span>
+                        <span>High Score: 🏆 <span id="high-score">${acc.snakeHighScore || 0}</span></span>
+                    </div>
+                    <canvas id="snakeCanvas" width="400" height="400"></canvas>
+                    <div class="controls">
+                        Use <b>Arrow Keys</b> or <b>W A S D</b> to steer your spooky snake!<br>
+                        Eat 🎃 Pumpkins (+10), 🍬 Candy Corn (+5), and 🧪 Potions (+15 & Speed)!
+                    </div>
+                    <button onclick="restartGame()">Restart Minigame</button>
 
-            // Rewrite url(...) references for images and web fonts
-            processed = processed.replace(/url\(\s*(['"]?)([^'")]+)\1\s*\)/gi, (match, quote, urlPath) => {
-                const trimmedUrl = urlPath.trim();
-                if (
-                    trimmedUrl.startsWith('data:') ||
-                    trimmedUrl.startsWith('blob:') ||
-                    trimmedUrl.startsWith('http://') ||
-                    trimmedUrl.startsWith('https://')
-                ) {
-                    return match;
-                }
-                if (trimmedUrl.startsWith('//')) {
-                    const proto = cssBaseUrl.startsWith('https:') ? 'https:' : 'http:';
-                    return `url(${quote}${proto}${trimmedUrl}${quote})`;
-                }
-                try {
-                    const absUrl = new URL(trimmedUrl, cssBaseUrl).href;
-                    return `url(${quote}${absUrl}${quote})`;
-                } catch (e) {
-                    return match;
-                }
-            });
+                    <script>
+                        const canvas = document.getElementById('snakeCanvas');
+                        const ctx = canvas.getContext('2d');
+                        const gridSize = 20;
+                        const tileCount = 20;
 
-            return processed;
+                        let snake = [{x: 10, y: 10}];
+                        let dx = 1, dy = 0;
+                        let food = {x: 5, y: 5, type: '🎃', pts: 10, candies: 10};
+                        let score = 0;
+                        let candiesEarned = 0;
+                        let gameInterval = null;
+                        let speed = 120;
+
+                        const foodTypes = [
+                            {type: '🎃', pts: 10, candies: 10},
+                            {type: '🍬', pts: 5, candies: 5},
+                            {type: '🧪', pts: 15, candies: 15}
+                        ];
+
+                        function spawnFood() {
+                            food.x = Math.floor(Math.random() * tileCount);
+                            food.y = Math.floor(Math.random() * tileCount);
+                            const pick = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+                            food.type = pick.type;
+                            food.pts = pick.pts;
+                            food.candies = pick.candies;
+                        }
+
+                        function draw() {
+                            // Move Snake
+                            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+                            // Wall Collision
+                            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) return gameOver();
+
+                            // Self Collision
+                            for (let i = 0; i < snake.length; i++) {
+                                if (snake[i].x === head.x && snake[i].y === head.y) return gameOver();
+                            }
+
+                            snake.unshift(head);
+
+                            // Eat Food
+                            if (head.x === food.x && head.y === food.y) {
+                                score += food.pts;
+                                candiesEarned += food.candies;
+                                document.getElementById('score').innerText = score;
+                                document.getElementById('candies').innerText = candiesEarned;
+                                spawnFood();
+                            } else {
+                                snake.pop();
+                            }
+
+                            // Render Canvas
+                            ctx.fillStyle = '#180f26';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                            // Draw Food
+                            ctx.font = '16px sans-serif';
+                            ctx.fillText(food.type, food.x * gridSize + 2, food.y * gridSize + 16);
+
+                            // Draw Snake
+                            snake.forEach((part, index) => {
+                                ctx.fillStyle = index === 0 ? '#ff7700' : '#9d4edd';
+                                ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+                            });
+                        }
+
+                        function gameOver() {
+                            clearInterval(gameInterval);
+                            window.parent.postMessage({ type: 'VTECH_SNAKE_PAYOUT', candies: candiesEarned, score: score }, '*');
+                            alert(\`Game Over! You earned \${candiesEarned} Candies! 🍬\`);
+                        }
+
+                        function restartGame() {
+                            clearInterval(gameInterval);
+                            snake = [{x: 10, y: 10}];
+                            dx = 1; dy = 0; score = 0; candiesEarned = 0;
+                            document.getElementById('score').innerText = 0;
+                            document.getElementById('candies').innerText = 0;
+                            spawnFood();
+                            gameInterval = setInterval(draw, speed);
+                        }
+
+                        document.addEventListener('keydown', (e) => {
+                            if ((e.key === 'ArrowUp' || e.key === 'w') && dy === 0) { dx = 0; dy = -1; }
+                            if ((e.key === 'ArrowDown' || e.key === 's') && dy === 0) { dx = 0; dy = 1; }
+                            if ((e.key === 'ArrowLeft' || e.key === 'a') && dx === 0) { dx = -1; dy = 0; }
+                            if ((e.key === 'ArrowRight' || e.key === 'd') && dx === 0) { dx = 1; dy = 0; }
+                        });
+
+                        restartGame();
+                    <\/script>
+                </body>
+                </html>
+            `;
         }
 
-        async function processAndInlineStylesheets(doc, baseUrl) {
-            const linkElements = Array.from(doc.querySelectorAll('link[rel~="stylesheet"], link[as="style"]'));
-            if (linkElements.length > 0) {
-                console.log(`[Rook CSS Engine] Processing ${linkElements.length} external stylesheet(s) concurrently...`);
+        /* CANDY SHOP HUB HTML */
+        function generateShopHTML() {
+            const acc = getActiveAccount();
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: sans-serif; background: #0b0712; color: #fff; padding: 30px; margin: 0; }
+                        .shop-header { border-bottom: 1px solid #9d4edd44; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+                        .balance { background: rgba(255,119,0,0.2); border: 1px solid #ff7700; padding: 8px 16px; border-radius: 20px; font-weight: bold; color: #ffb703; }
+                        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+                        .card { background: #180f26; border: 1px solid #9d4edd44; border-radius: 12px; padding: 16px; text-align: center; }
+                        .card-icon { font-size: 36px; margin-bottom: 8px; }
+                        .card-title { font-weight: bold; font-size: 15px; margin-bottom: 4px; }
+                        .card-price { color: #ffb703; font-weight: bold; font-size: 13px; margin-bottom: 12px; }
+                        button { background: #ff7700; color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
+                        button:disabled { opacity: 0.5; cursor: not-allowed; }
+                    </style>
+                </head>
+                <body>
+                    <div class="shop-header">
+                        <h2>🍬 Spooky Candy Shop Hub</h2>
+                        <div class="balance">Balance: 🍬 ${acc.candies || 0}</div>
+                    </div>
+
+                    <h3>Profile Avatars</h3>
+                    <div class="grid">
+                        ${renderShopItem('avatar', '🧙‍♂️', 'Warlock Avatar', 50, acc.unlockedAvatars.includes('🧙‍♂️'))}
+                        ${renderShopItem('avatar', '💀', 'Skeleton Lord', 80, acc.unlockedAvatars.includes('💀'))}
+                        ${renderShopItem('avatar', '👾', 'Cyber Demon', 120, acc.unlockedAvatars.includes('👾'))}
+                        ${renderShopItem('avatar', '👑', 'Candy King', 200, acc.unlockedAvatars.includes('👑'))}
+                    </div>
+
+                    <h3 style="margin-top:28px;">Glint FX Color Palettes</h3>
+                    <div class="grid">
+                        ${renderShopItem('glint', '✨', 'Ghost Glow', 40, acc.unlockedGlints.includes('ghost'))}
+                        ${renderShopItem('glint', '🔥', 'Pumpkin Spice', 60, acc.unlockedGlints.includes('pumpkin'))}
+                        ${renderShopItem('glint', '🧪', 'Witch Poison', 90, acc.unlockedGlints.includes('poison'))}
+                    </div>
+
+                    <script>
+                        function buy(type, id, price) {
+                            window.parent.postMessage({ type: 'VTECH_BUY_ITEM', itemType: type, itemId: id, price: price }, '*');
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `;
+        }
+
+        function renderShopItem(type, icon, name, price, owned) {
+            return `
+                <div class="card">
+                    <div class="card-icon">${icon}</div>
+                    <div class="card-title">${name}</div>
+                    <div class="card-price">🍬 ${price} Candies</div>
+                    <button ${owned ? 'disabled' : ''} onclick="buy('${type}', '${icon === '✨' ? 'ghost' : icon === '🔥' ? 'pumpkin' : icon === '🧪' ? 'poison' : icon}', ${price})">
+                        ${owned ? 'Owned' : 'Buy Item'}
+                    </button>
+                </div>
+            `;
+        }
+
+        /* USER ACCOUNT & LOOT HUB HTML */
+        function generateAccountHTML() {
+            const acc = getActiveAccount();
+            const isDev = acc.username.toLowerCase() === 'vtechluver' || acc.role === 'Developer';
+
+            const avatarsHTML = acc.unlockedAvatars.map(av => `
+                <span style="font-size: 28px; cursor: pointer; padding: 6px; border: 2px solid ${acc.avatar === av ? '#00f0ff' : 'transparent'}; border-radius: 10px; background: rgba(255,255,255,0.05);" onclick="setAvatar('${av}')">${av}</span>
+            `).join('');
+
+            // Dev Admin Panel Accounts Directory Table
+            let devPanelHTML = '';
+            if (isDev) {
+                const accountRows = accounts.map(a => `
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid #232838;">${a.avatar} <b>${a.username}</b></td>
+                        <td style="padding:10px; border-bottom:1px solid #232838;"><span style="color:#00f0ff; font-weight:bold;">${a.role || 'User'}</span></td>
+                        <td style="padding:10px; border-bottom:1px solid #232838; color:#ffb703;">🍬 ${a.candies || 0}</td>
+                        <td style="padding:10px; border-bottom:1px solid #232838;">Lvl ${a.level || 1}</td>
+                        <td style="padding:10px; border-bottom:1px solid #232838;">
+                            <span style="color: ${a.isBanned ? '#ff5252' : '#81c995'}; font-weight:bold;">${a.isBanned ? 'BANNED' : 'ACTIVE'}</span>
+                        </td>
+                        <td style="padding:10px; border-bottom:1px solid #232838;">
+                            ${a.username.toLowerCase() !== 'vtechluver' ? `
+                                <button style="background:${a.isBanned ? '#81c995' : '#ff5252'}; color:#000; border:none; padding:4px 10px; border-radius:6px; font-weight:bold; cursor:pointer;" onclick="toggleBan('${a.id}')">
+                                    ${a.isBanned ? 'Unban' : 'Ban'}
+                                </button>
+                                <button style="background:#7c5cff; color:#fff; border:none; padding:4px 10px; border-radius:6px; font-weight:bold; cursor:pointer; margin-left:4px;" onclick="giveCandiesPrompt('${a.id}')">
+                                    +Candies
+                                </button>
+                            ` : '<span style="color:#8a94a6; font-size:12px;">Protected</span>'}
+                        </td>
+                    </tr>
+                `).join('');
+
+                devPanelHTML = `
+                    <div class="card" style="border: 1px solid #00f0ff; box-shadow: 0 0 20px rgba(0,240,255,0.2);">
+                        <h3 style="color:#00f0ff; display:flex; align-items:center; gap:8px;">
+                            👑 DEVELOPER ADMIN CONTROL CENTER (vtechluver)
+                        </h3>
+                        <p style="color:#8a94a6; font-size:13px; margin-bottom:16px;">
+                            Full access granted to user directory, ban engine, role management, and candy overrides.
+                        </p>
+                        <table style="width:100%; border-collapse:collapse; font-size:13px; text-align:left;">
+                            <thead>
+                                <tr style="background:rgba(0,240,255,0.1); color:#00f0ff;">
+                                    <th style="padding:10px;">User</th>
+                                    <th style="padding:10px;">Role</th>
+                                    <th style="padding:10px;">Candies</th>
+                                    <th style="padding:10px;">Level</th>
+                                    <th style="padding:10px;">Status</th>
+                                    <th style="padding:10px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${accountRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             }
 
-            const cssFetchPromises = linkElements.map(async (link) => {
-                const rawHref = link.getAttribute('href');
-                if (!rawHref) return;
-
-                try {
-                    const cssUrl = new URL(rawHref, baseUrl).href;
-                    
-                    const resp = await fetchWithTimeout(cssUrl, {
-                        method: 'GET',
-                        headers: {
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/124.0.0.0 Safari/537.36',
-                            'Accept': 'text/css,*/*;q=0.1',
-                            'Accept-Encoding': 'identity'
+            return `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: sans-serif; background: #090a0f; color: #fff; padding: 30px; margin: 0; }
+                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+                        .card { background: #12141d; border: 1px solid #232838; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+                        .avatar-picker { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+                        input[type="text"], input[type="password"] {
+                            width: 100%; background: #06070a; border: 1px solid #232838; border-radius: 8px;
+                            padding: 10px 12px; color: #fff; margin-bottom: 12px; outline: none; box-sizing: border-box;
                         }
-                    }, 8000);
+                        button { background: #00f0ff; color: #000; border: none; padding: 10px 18px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; }
+                        button:hover { opacity: 0.9; }
+                        .role-badge { background: rgba(0,240,255,0.15); color: #00f0ff; border: 1px solid #00f0ff; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h2>👤 User Profile & Account Hub</h2>
 
-                    let cssText = await resp.text();
-                    const trimmedCss = cssText.trim();
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Current Active Profile</h3>
+                            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+                                <span style="font-size:42px;">${acc.avatar}</span>
+                                <div>
+                                    <div style="font-size:18px; font-weight:bold;">${acc.username} <span class="role-badge">${acc.role || 'User'}</span></div>
+                                    <div style="color:#8a94a6; font-size:13px;">ID: ${acc.id}</div>
+                                </div>
+                            </div>
 
-                    // CRITICAL FIX: Validate that response is valid CSS and not an HTML error or captcha response from Google/CDNs
-                    if (trimmedCss.startsWith('<') || /^<!DOCTYPE/i.test(trimmedCss)) {
-                        console.warn(`[Rook CSS Engine] Skipped stylesheet from (${cssUrl}): Server returned HTML page/error instead of CSS.`);
-                        return;
-                    }
+                            <p>🍬 Candy Balance: <b style="color:#ffb703;">${acc.candies || 0} Candies</b></p>
+                            <p>⭐ Level: <b>Level ${acc.level || 1}</b> (XP: ${acc.xp || 0})</p>
+                            <p>🏆 Snake High Score: <b>${acc.snakeHighScore || 0} pts</b></p>
 
-                    cssText = resolveCssUrls(cssText, cssUrl);
+                            <h4 style="margin-top:16px;">Unlocked Avatars</h4>
+                            <div class="avatar-picker">${avatarsHTML}</div>
+                        </div>
 
-                    // Safely escape </style> tags in fetched CSS string
-                    const safeCssText = cssText.replace(/<\/style/gi, '<\\/style');
+                        <div class="card">
+                            <h3>Account Login & Registration</h3>
+                            <p style="color:#8a94a6; font-size:13px; margin-bottom:14px;">Log in or create a password-protected account to save your candy loot and unlocked perks.</p>
 
-                    const styleEl = doc.createElement('style');
-                    styleEl.setAttribute('data-proxied-from', cssUrl);
-                    styleEl.textContent = safeCssText;
+                            <input type="text" id="acc-username" placeholder="Username" />
+                            <input type="password" id="acc-password" placeholder="Password" />
 
-                    if (link.parentNode) {
-                        link.parentNode.replaceChild(styleEl, link);
-                    }
-                    console.log(`[Rook CSS Engine] Successfully inlined stylesheet: ${cssUrl}`);
-                } catch (err) {
-                    console.warn(`[Rook CSS Engine] Skipped stylesheet (${rawHref}): ${err.message || err}`);
-                }
-            });
+                            <div style="display:flex; gap:10px;">
+                                <button onclick="login()">Log In</button>
+                                <button style="background:#7c5cff; color:#fff;" onclick="register()">Create Account</button>
+                            </div>
+                        </div>
+                    </div>
 
-            await Promise.all(cssFetchPromises);
+                    ${devPanelHTML}
 
-            // Rewrite existing inline <style> elements for url(...) assets and escape tags
-            const styleElements = Array.from(doc.querySelectorAll('style'));
-            styleElements.forEach(style => {
-                if (!style.hasAttribute('data-proxied-from') && style.textContent) {
-                    let updatedCss = resolveCssUrls(style.textContent, baseUrl);
-                    style.textContent = updatedCss.replace(/<\/style/gi, '<\\/style');
-                }
-            });
+                    <div class="card">
+                        <h3>Backup & Data Tools</h3>
+                        <button style="background:transparent; border:1px solid #232838; color:#fff;" onclick="exportBackup()">Export Account Backup (JSON)</button>
+                    </div>
+
+                    <script>
+                        function setAvatar(av) {
+                            window.parent.postMessage({ type: 'VTECH_SET_AVATAR', avatar: av }, '*');
+                        }
+                        function login() {
+                            const u = document.getElementById('acc-username').value;
+                            const p = document.getElementById('acc-password').value;
+                            window.parent.postMessage({ type: 'VTECH_ACCOUNT_LOGIN', username: u, password: p }, '*');
+                        }
+                        function register() {
+                            const u = document.getElementById('acc-username').value;
+                            const p = document.getElementById('acc-password').value;
+                            window.parent.postMessage({ type: 'VTECH_ACCOUNT_REGISTER', username: u, password: p }, '*');
+                        }
+                        function toggleBan(accId) {
+                            window.parent.postMessage({ type: 'VTECH_DEV_TOGGLE_BAN', targetId: accId }, '*');
+                        }
+                        function giveCandiesPrompt(accId) {
+                            const amt = prompt("Enter candy amount to add:", "500");
+                            if (amt) {
+                                window.parent.postMessage({ type: 'VTECH_DEV_GIVE_CANDIES', targetId: accId, amount: parseInt(amt) || 0 }, '*');
+                            }
+                        }
+                        function exportBackup() {
+                            window.parent.postMessage({ type: 'VTECH_EXPORT_BACKUP' }, '*');
+                        }
+                    <\/script>
+                </body>
+                </html>
+            `;
         }
 
+        function generateSettingsPageHTML() {
+            return `
+                <!DOCTYPE html>
+                <html>
+                <body style="background:#090a0f; color:#fff; font-family:sans-serif; padding:30px;">
+                    <h2>⚙️ VTech Browser Settings Hub</h2>
+                    <p>Manage themes, clock preferences, and proxy behavior.</p>
+                </body>
+                </html>
+            `;
+        }
+
+        /* ==========================================================================
+           20. IFRAME SHIMS & STYLESHEETS
+           ========================================================================== */
         async function prepareDocumentForIframe(rawHtml, baseUrl, tabId) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(rawHtml, 'text/html');
 
-            // Remove restrictive CSP or X-Frame headers
             doc.querySelectorAll('meta[http-equiv="Content-Security-Policy"], meta[http-equiv="X-Frame-Options"]').forEach(el => el.remove());
 
-            // Normalize base URL so domain roots end with a trailing slash (e.g. https://www.google.com/)
-            let canonicalBaseUrl = baseUrl;
-            try {
-                canonicalBaseUrl = new URL(baseUrl).href;
-            } catch(e) {}
-
-          
-
-            // Ensure <base href="..."> is injected as the absolute first child of <head>
-            doc.querySelectorAll('base').forEach(el => el.remove());
-
             const baseElement = doc.createElement('base');
-            baseElement.setAttribute('href', canonicalBaseUrl);
-
-            if (doc.head) {
-                doc.head.insertBefore(baseElement, doc.head.firstChild);
-            } else if (doc.documentElement) {
-                doc.documentElement.insertBefore(baseElement, doc.documentElement.firstChild);
-            }
-
-            // Inject WebRTC Disabler Script if active
-            const securityScript = doc.createElement('script');
-            securityScript.textContent = `
-                (function() {
-                    const WEBRTC_DISABLED = ${disableWebRTC};
-                    if (WEBRTC_DISABLED) {
-                        window.RTCPeerConnection = undefined;
-                        window.webkitRTCPeerConnection = undefined;
-                        window.mozRTCPeerConnection = undefined;
-                        window.RTCSessionDescription = undefined;
-                        window.RTCIceCandidate = undefined;
-                        if (navigator.mediaDevices) {
-                            navigator.mediaDevices.getUserMedia = undefined;
-                            navigator.mediaDevices.getDisplayMedia = undefined;
-                        }
-                        navigator.getUserMedia = undefined;
-                        navigator.webkitGetUserMedia = undefined;
-                        navigator.mozGetUserMedia = undefined;
-                    }
-                })();
-            `;
-            if (doc.head) {
-                doc.head.appendChild(securityScript);
-            } else if (doc.documentElement) {
-                doc.documentElement.appendChild(securityScript);
-            }
-
-            // Process and inline external CSS safely
-            await processAndInlineStylesheets(doc, canonicalBaseUrl);
-
-            // Navigation and form interaction shim
-            const shimScript = doc.createElement('script');
-            shimScript.textContent = `
-                (function() {
-                    const TARGET_BASE_URL = "${canonicalBaseUrl}";
-                    const TAB_ID = "${tabId}";
-
-                    function requestParentNavigation(rawUrl) {
-                        try {
-                            const resolvedUrl = new URL(rawUrl, TARGET_BASE_URL).href;
-                            window.parent.postMessage({
-                                type: 'ROOK_INTERCEPT_NAVIGATE',
-                                tabId: TAB_ID,
-                                url: resolvedUrl
-                            }, '*');
-                        } catch(e) {
-                            console.error("[Rook Interceptor] Navigation resolution error:", e);
-                        }
-                    }
-
-                    document.addEventListener('click', function(e) {
-                        const anchor = e.target.closest('a');
-                        if (anchor) {
-                            const href = anchor.getAttribute('href');
-                            if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
-                                e.preventDefault();
-                                requestParentNavigation(href);
-                            }
-                        }
-                    }, true);
-
-                    document.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        const form = e.target;
-                        const action = form.getAttribute('action') || TARGET_BASE_URL;
-                        const method = (form.getAttribute('method') || 'GET').toUpperCase();
-                        
-                        if (method === 'GET') {
-                            const formData = new FormData(form);
-                            const params = new URLSearchParams(formData).toString();
-                            const fullUrl = action + (action.includes('?') ? '&' : '?') + params;
-                            requestParentNavigation(fullUrl);
-                        }
-                    }, true);
-                })();
-            `;
-
-            if (doc.head) doc.head.appendChild(shimScript);
-            else if (doc.documentElement) doc.documentElement.appendChild(shimScript);
+            baseElement.setAttribute('href', baseUrl);
+            if (doc.head) doc.head.insertBefore(baseElement, doc.head.firstChild);
 
             return doc.documentElement.outerHTML;
         }
@@ -1622,62 +2499,8 @@
         }
 
         function renderErrorView(tabObj, targetUrl, error) {
-            const doc = tabObj.iframeEl.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>
-                        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #202124; color: #e8eaed; padding: 60px 40px; margin: 0; }
-                        .card { max-width: 580px; margin: 0 auto; }
-                        h2 { color: #f28b82; font-size: 22px; font-weight: 500; margin-bottom: 12px; }
-                        p { font-size: 14px; color: #9aa0a6; line-height: 1.6; }
-                        code { background: #292a2d; color: #fdd663; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; }
-                        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-                        .btn-primary { background: #8ab4f8; color: #202124; border: none; padding: 10px 20px; border-radius: 18px; font-weight: 600; cursor: pointer; }
-                    </style>
-                </head>
-                <body>
-                    <div class="card">
-                        <h2>This site can't be reached via Wisp Proxy</h2>
-                        <p>Rook Browser attempted to connect to <code>${targetUrl}</code>, but all fallback Wisp nodes failed to respond.</p>
-                        <p style="margin-top: 12px;"><b>Error Details:</b> <code>${error.message || error}</code></p>
-                        <div class="btn-group">
-                            <button class="btn-primary" onclick="window.parent.postMessage({type: 'ROOK_RETRY', tabId: '${tabObj.id}'}, '*')">Retry Connection</button>
-                        </div>
-                    </div>
-                </body>
-                </html>
-            `);
-            doc.close();
+            renderIframeContent(tabObj, `<body style="background:#090a0f; color:#f28b82; padding:40px;"><h2>Failed to load ${targetUrl}</h2><p>${error.message}</p></body>`);
         }
-
-        window.addEventListener('message', async (event) => {
-            if (!event.data) return;
-
-            if (event.data.type === 'ROOK_INTERCEPT_NAVIGATE') {
-                const targetTab = tabs.find(t => t.id === event.data.tabId) || getActiveTab();
-                if (targetTab) {
-                    switchTab(targetTab.id);
-                    navigateActiveTab(event.data.url);
-                }
-            }
-
-            if (event.data.type === 'ROOK_SET_WISP') {
-                if (event.data.url) {
-                    setWispEndpoint(event.data.url);
-                    if (uiWispInput) uiWispInput.value = event.data.url;
-                }
-            }
-
-            if (event.data.type === 'ROOK_RETRY') {
-                const targetTab = tabs.find(t => t.id === event.data.tabId) || getActiveTab();
-                if (targetTab && targetTab.url) {
-                    navigateActiveTab(targetTab.url);
-                }
-            }
-        });
 
         function showTabLoader(tabObj, show, message = "") {
             if (message && tabObj.loaderText) tabObj.loaderText.innerText = message;
@@ -1702,13 +2525,107 @@
             }
         }
 
-        // Attach UI Listeners
+        /* ==========================================================================
+           21. MESSAGE BUS & EVENT LISTENERS
+           ========================================================================== */
+        window.addEventListener('message', (event) => {
+            if (!event.data) return;
+
+            if (event.data.type === 'VTECH_ACCOUNT_LOGIN') {
+                const res = loginUser(event.data.username, event.data.password);
+                alert(res.message);
+                if (res.success) {
+                    const activeTab = getActiveTab();
+                    if (activeTab && activeTab.url === 'vtech://account') navigateActiveTab('vtech://account');
+                }
+            }
+
+            if (event.data.type === 'VTECH_ACCOUNT_REGISTER') {
+                const res = registerUser(event.data.username, event.data.password);
+                alert(res.message);
+                if (res.success) {
+                    const activeTab = getActiveTab();
+                    if (activeTab && activeTab.url === 'vtech://account') navigateActiveTab('vtech://account');
+                }
+            }
+
+            if (event.data.type === 'VTECH_DEV_TOGGLE_BAN') {
+                const currentAcc = getActiveAccount();
+                if (currentAcc.username.toLowerCase() === 'vtechluver' || currentAcc.role === 'Developer') {
+                    const target = accounts.find(a => a.id === event.data.targetId);
+                    if (target) {
+                        target.isBanned = !target.isBanned;
+                        saveAccounts();
+                        showCandyToast(`Updated Ban status for ${target.username}`);
+                        const activeTab = getActiveTab();
+                        if (activeTab && activeTab.url === 'vtech://account') navigateActiveTab('vtech://account');
+                    }
+                }
+            }
+
+            if (event.data.type === 'VTECH_DEV_GIVE_CANDIES') {
+                const currentAcc = getActiveAccount();
+                if (currentAcc.username.toLowerCase() === 'vtechluver' || currentAcc.role === 'Developer') {
+                    const target = accounts.find(a => a.id === event.data.targetId);
+                    if (target) {
+                        target.candies = (target.candies || 0) + (event.data.amount || 0);
+                        saveAccounts();
+                        showCandyToast(`Added ${event.data.amount} 🍬 to ${target.username}`);
+                        const activeTab = getActiveTab();
+                        if (activeTab && activeTab.url === 'vtech://account') navigateActiveTab('vtech://account');
+                    }
+                }
+            }
+
+            if (event.data.type === 'VTECH_SNAKE_PAYOUT') {
+                const acc = getActiveAccount();
+                if (event.data.score > (acc.snakeHighScore || 0)) acc.snakeHighScore = event.data.score;
+                addCandies(event.data.candies, "Snake Minigame Payout!");
+            }
+
+            if (event.data.type === 'VTECH_BUY_ITEM') {
+                const acc = getActiveAccount();
+                if (acc.candies >= event.data.price) {
+                    acc.candies -= event.data.price;
+                    if (event.data.itemType === 'avatar') acc.unlockedAvatars.push(event.data.itemId);
+                    if (event.data.itemType === 'glint') acc.unlockedGlints.push(event.data.itemId);
+                    saveAccounts();
+                    showCandyToast("🎉 Item Unlocked!");
+                    const activeTab = getActiveTab();
+                    if (activeTab && activeTab.url === 'vtech://shop') navigateActiveTab('vtech://shop');
+                } else {
+                    alert("Not enough Candies! Visit more websites or play Snake to earn more!");
+                }
+            }
+
+            if (event.data.type === 'VTECH_SET_AVATAR') {
+                const acc = getActiveAccount();
+                acc.avatar = event.data.avatar;
+                saveAccounts();
+                const activeTab = getActiveTab();
+                if (activeTab && activeTab.url === 'vtech://account') navigateActiveTab('vtech://account');
+            }
+
+            if (event.data.type === 'VTECH_EXPORT_BACKUP') {
+                const blob = new Blob([JSON.stringify(accounts, null, 2)], { type: 'application/json' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'vtech-accounts-backup.json';
+                a.click();
+            }
+        });
+
+        /* Toggle Spooky Halloween Mode */
+        uiSpookyToggleBtn.addEventListener('click', () => {
+            appSettings.theme = appSettings.theme === 'spooky' ? 'midnight' : 'spooky';
+            saveSettings();
+        });
+
+        /* Top Bar Button Listeners */
         uiAddTabBtn.addEventListener('click', () => createNewTab());
 
         uiUrlInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                navigateActiveTab(uiUrlInput.value);
-            }
+            if (e.key === 'Enter') navigateActiveTab(uiUrlInput.value);
         });
 
         uiReloadBtn.addEventListener('click', () => {
@@ -1741,46 +2658,38 @@
             const customWisp = uiWispInput.value.trim();
             if (customWisp) {
                 setWispEndpoint(customWisp);
+                saveSettings();
                 uiWispPopup.classList.remove('active');
-                uiWispToggleBtn.classList.remove('active');
-                const activeTab = getActiveTab();
-                if (activeTab && activeTab.url) navigateActiveTab(activeTab.url);
-            }
-        });
-
-        uiWebRtcToggle.addEventListener('change', (e) => {
-            disableWebRTC = e.target.checked;
-            if (disableWebRTC) {
-                console.log("[Rook Security] WebRTC Disabled (Protected from IP leaks)");
-            } else {
-                console.warn("[Rook Security] WebRTC Enabled (IP leak protection off)");
             }
         });
 
         uiLogToggleBtn.addEventListener('click', () => {
             uiLogDrawer.classList.toggle('active');
-            uiLogToggleBtn.classList.toggle('active');
         });
 
         uiClearLogsBtn.addEventListener('click', () => {
             uiLogContent.innerHTML = '';
         });
 
-        // Initialize Engine on load
+        function toggleChat() {
+            const container = document.getElementById('chat-widget-container');
+            const btn = document.getElementById('chat-widget-btn');
+            if (container.style.display === 'none' || !container.style.display) {
+                container.style.display = 'flex';
+                btn.innerHTML = '❌ Close Chat';
+            } else {
+                container.style.display = 'none';
+                btn.innerHTML = '💬 Chat';
+            }
+        }
+
+        // Initialize Settings & WASM Engine
+        applySettingsUI();
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initEngine);
         } else {
             initEngine();
         }
-
-
-
-
     </script>
-
-
-
-
-
 </body>
 </html>
